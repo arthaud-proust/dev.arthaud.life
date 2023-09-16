@@ -1,3 +1,11 @@
+/**
+ * Separation of Concerns Principle :
+ * Here should only appear the basic game logic.
+ * Here should not appear code related to display, animations, startup state, etc.
+ * So, only game rules in this file!
+ */
+
+
 const DEAD = 0;
 const ALIVE = 1;
 

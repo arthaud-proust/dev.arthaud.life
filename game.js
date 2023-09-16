@@ -1,22 +1,63 @@
+/**
+ * Separation of Concerns Principle :
+ * Here should only appear code related to game start, run and display.
+ */
+
 const {DEAD, getNextStepCellState, ALIVE} = require("./life.js");
 
+const FRAME_INTERVAL = 500;
+
 let mat = [
-    [DEAD, ALIVE, DEAD],
-    [DEAD, ALIVE, DEAD],
-    [DEAD, ALIVE, DEAD],
+    [DEAD, DEAD, DEAD, DEAD, DEAD],
+    [DEAD, DEAD, DEAD, DEAD, DEAD],
+    [DEAD, DEAD, ALIVE, ALIVE, ALIVE],
+    [DEAD, DEAD, ALIVE, DEAD, DEAD],
+    [DEAD, DEAD, DEAD, ALIVE, DEAD],
 ];
 
 function printMat(mat) {
     console.clear()
-    console.log(`
-    ${mat[0][0]} ${mat[1][0]} ${mat[2][0]}
-    ${mat[0][1]} ${mat[1][1]} ${mat[2][1]}
-    ${mat[0][2]} ${mat[1][2]} ${mat[2][2]}
-    `)
+    console.log(mat.map(row => row.map(ceil => ceil === ALIVE ? "■" : "□").join('  ')).join("\n"))
+}
+
+function getNextMat(mat) {
+    const extendedMat = extendMat(mat);
+
+    return extendedMat.map((row, x) =>
+        row.map((ceil, y) =>
+            getNextStepCellState(mat, [x, y])
+        )
+    )
+}
+
+function extendMat(mat) {
+    // extend a mat side if its border contain an alive ceil
+
+    // top
+    if (mat[0].some(ceilState => ceilState === ALIVE)) {
+        mat.unshift(Array(mat[0].length).fill(DEAD))
+    }
+
+    // bottom
+    if (mat[mat.length - 1].some(ceilState => ceilState === ALIVE)) {
+        mat.push(Array(mat[mat.length - 1].length).fill(DEAD));
+    }
+
+    // left
+    if (mat.some(row => row[0] === ALIVE)) {
+        mat.forEach(row => row.unshift(DEAD));
+    }
+
+    // right
+    if (mat.some(row => row[row.length - 1] === ALIVE)) {
+        mat.forEach(row => row.push(DEAD));
+    }
+
+    return mat
 }
 
 setInterval(() => {
-    mat = mat.map((row, x) => row.map((ceil, y) => getNextStepCellState(mat, [x, y])))
+    mat = getNextMat(mat);
 
     printMat(mat)
-}, 1000);
+}, FRAME_INTERVAL);
