@@ -1,8 +1,8 @@
 <script setup lang="ts">
+import Cell from "@/components/Cell.vue";
+import { Matrix } from "@/types/life";
 import { useElementSize } from "@vueuse/core";
 import { ref } from "vue";
-import { Matrix } from "../types/life";
-import Cell from "./Cell.vue";
 
 defineProps<{
   matrix: Matrix;

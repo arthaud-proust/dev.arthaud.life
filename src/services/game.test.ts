@@ -1,6 +1,10 @@
-import { ALIVE, DEAD, Matrix } from "../types/life";
+import { ALIVE, DEAD, Matrix } from "@/types/life";
 
-import { getExtendedMatrix, getNextMatrix, matrixToString } from "./game.ts";
+import {
+  getExtendedMatrix,
+  getNextMatrix,
+  matrixToString,
+} from "@/services/game.ts";
 
 describe("matToString", () => {
   test("should return formated cells", () => {

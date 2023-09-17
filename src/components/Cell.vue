@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ALIVE, CellState } from "../types/life";
+import { ALIVE, CellState } from "@/types/life";
 
 defineProps<{
   state: CellState;

@@ -1,8 +1,8 @@
 <script setup lang="ts">
+import MatrixGrid from "@/components/MatrixGrid.vue";
+import { startGame } from "@/services/game";
+import { ALIVE as A, DEAD as D, Matrix } from "@/types/life";
 import { ref } from "vue";
-import { startGame } from "../services/game";
-import { ALIVE as A, DEAD as D, Matrix } from "../types/life";
-import MatrixGrid from "./MatrixGrid.vue";
 
 const planner: Matrix = [
   [D, D, D, D, D],
@@ -13,7 +13,6 @@ const planner: Matrix = [
 ];
 
 // prettier-ignore
-
 const plannerCannon: Matrix = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],

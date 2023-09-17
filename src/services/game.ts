@@ -2,9 +2,9 @@
  * Separation of Concerns Principle :
  * Here should only appear code related to game start, run and display.
  */
-import { ALIVE, DEAD, Matrix } from "../types/life";
+import { ALIVE, DEAD, Matrix } from "@/types/life";
 
-import { getNextStepCellState } from "../rules/life.ts";
+import { getNextStepCellState } from "@/rules/life.ts";
 
 const FRAME_INTERVAL = 100;
 

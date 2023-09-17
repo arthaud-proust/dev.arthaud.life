@@ -1,4 +1,4 @@
-import { ALIVE, DEAD, Matrix } from "../types/life.ts";
+import { ALIVE, DEAD, Matrix } from "@/types/life.ts";
 
 import {
   getCellState,
