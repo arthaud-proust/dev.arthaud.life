@@ -1,19 +1,19 @@
 const {startGame} = require("./game.js");
-const {DEAD, ALIVE} = require("./life.js");
+const {DEAD: D, ALIVE: A} = require("./life.js");
 
 
-// let matrix = [
-//     [DEAD, DEAD, DEAD, DEAD, DEAD],
-//     [DEAD, DEAD, DEAD, DEAD, DEAD],
-//     [DEAD, DEAD, ALIVE, ALIVE, ALIVE],
-//     [DEAD, DEAD, ALIVE, DEAD, DEAD],
-//     [DEAD, DEAD, DEAD, ALIVE, DEAD],
-// ];
-
-const matrix = [
-    [DEAD, DEAD, DEAD],
-    [ALIVE, ALIVE, ALIVE],
-    [DEAD, DEAD, DEAD],
+let planner = [
+    [D, D, D, D, D],
+    [D, D, A, D, D],
+    [D, D, D, A, D],
+    [D, A, A, A, D],
+    [D, D, D, D, D],
 ];
 
-startGame(matrix);
+const turnSignal = [
+    [D, D, D],
+    [A, A, A],
+    [D, D, D],
+];
+
+startGame(planner);

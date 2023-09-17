@@ -49,15 +49,18 @@ function getExtendedMatrix(matrix) {
     return matrix
 }
 
-function startGame(matrix) {
+function displayMatrix(matrix) {
     console.clear()
     console.log(matrixToString(matrix));
+}
+
+function startGame(matrix) {
+    displayMatrix(matrix);
 
     setInterval(() => {
         matrix = getNextMatrix(matrix);
 
-        console.clear()
-        console.log(matrixToString(matrix));
+        displayMatrix(matrix);
     }, FRAME_INTERVAL);
 }
 
