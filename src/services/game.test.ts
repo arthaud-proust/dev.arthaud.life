@@ -1,85 +1,61 @@
 import { ALIVE, DEAD, Matrix } from "@/types/life";
+import { delay } from "@/utils/delay";
+import { Game } from "./game";
 
-import {
-  getExtendedMatrix,
-  getNextMatrix,
-  matrixToString,
-} from "@/services/game.ts";
+test("should play when start game", () => {
+  const game = new Game();
 
-describe("matToString", () => {
-  test("should return formated cells", () => {
-    const matrix: Matrix = [
-      [DEAD, ALIVE, DEAD],
-      [DEAD, DEAD, DEAD],
-      [DEAD, DEAD, ALIVE],
-    ];
+  const startMatrix: Matrix = [[ALIVE, DEAD]];
+  game.start(startMatrix);
 
-    expect(matrixToString(matrix)).toBe("   ■   \n       \n      ■");
-  });
+  expect(game.matrix).toStrictEqual(startMatrix);
+  expect(game.isPlaying).toBe(true);
 });
 
-describe("getExtendedMatrix", () => {
-  test("should extend on all sides", () => {
-    const matrix: Matrix = [
-      [ALIVE, DEAD, DEAD],
-      [DEAD, DEAD, DEAD],
-      [DEAD, DEAD, ALIVE],
-    ];
+test("should change frame interval", () => {
+  const game = new Game();
 
-    expect(getExtendedMatrix(matrix)).toStrictEqual([
-      [DEAD, DEAD, DEAD, DEAD, DEAD],
-      [DEAD, ALIVE, DEAD, DEAD, DEAD],
-      [DEAD, DEAD, DEAD, DEAD, DEAD],
-      [DEAD, DEAD, DEAD, ALIVE, DEAD],
-      [DEAD, DEAD, DEAD, DEAD, DEAD],
-    ]);
-  });
+  const frameInterval = 1093892;
+  game.setFrameInterval(frameInterval);
 
-  test("should not extend matrice", () => {
-    const matrix: Matrix = [
-      [DEAD, DEAD, DEAD],
-      [DEAD, ALIVE, DEAD],
-      [DEAD, DEAD, DEAD],
-    ];
-
-    expect(getExtendedMatrix(matrix)).toStrictEqual([
-      [DEAD, DEAD, DEAD],
-      [DEAD, ALIVE, DEAD],
-      [DEAD, DEAD, DEAD],
-    ]);
-  });
+  expect(game.frameMsInterval).toStrictEqual(frameInterval);
 });
 
-describe("getNextMatrix", () => {
-  test("should kill the alive cell", () => {
-    const matrix: Matrix = [
-      [DEAD, DEAD, DEAD],
-      [DEAD, ALIVE, DEAD],
-      [DEAD, DEAD, DEAD],
-    ];
+test("should not change matrix if paused", async () => {
+  const game = new Game();
+  const startMatrix: Matrix = [[ALIVE, DEAD]];
+  const frameInterval = 10;
 
-    expect(getNextMatrix(matrix)).toStrictEqual([
-      [DEAD, DEAD, DEAD],
-      [DEAD, DEAD, DEAD],
-      [DEAD, DEAD, DEAD],
-    ]);
-  });
+  game.setFrameInterval(frameInterval).start(startMatrix).pause();
 
-  test("make born new cell", () => {
-    const matrix: Matrix = [
-      [DEAD, DEAD, DEAD, DEAD, DEAD],
-      [DEAD, DEAD, DEAD, DEAD, DEAD],
-      [DEAD, ALIVE, ALIVE, ALIVE, DEAD],
-      [DEAD, DEAD, DEAD, DEAD, DEAD],
-      [DEAD, DEAD, DEAD, DEAD, DEAD],
-    ];
+  await delay(frameInterval + 1);
 
-    expect(getNextMatrix(matrix)).toStrictEqual([
-      [DEAD, DEAD, DEAD, DEAD, DEAD],
-      [DEAD, DEAD, ALIVE, DEAD, DEAD],
-      [DEAD, DEAD, ALIVE, DEAD, DEAD],
-      [DEAD, DEAD, ALIVE, DEAD, DEAD],
-      [DEAD, DEAD, DEAD, DEAD, DEAD],
-    ]);
-  });
+  expect(game.matrix).toStrictEqual(startMatrix);
+});
+
+test("should change matrix if playing", async () => {
+  const game = new Game();
+  const startMatrix: Matrix = [[ALIVE, DEAD]];
+  const frameInterval = 10;
+
+  game.setFrameInterval(frameInterval).start(startMatrix);
+
+  await delay(frameInterval + 1);
+
+  expect(game.matrix).not.toStrictEqual(startMatrix);
+});
+
+test("should call onMatrixUpdate when matrix updated", async () => {
+  const game = new Game();
+  const startMatrix: Matrix = [[ALIVE, DEAD]];
+  const frameInterval = 10;
+
+  let test = false;
+
+  game.onMatrixUpdate(() => (test = true));
+  game.setFrameInterval(frameInterval).start(startMatrix);
+
+  await delay(frameInterval + 1);
+
+  expect(test).toBe(true);
 });
