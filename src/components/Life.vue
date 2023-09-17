@@ -1,43 +1,53 @@
 <script setup lang="ts">
 import MatrixGrid from "@/components/MatrixGrid.vue";
-import { startGame } from "@/services/game";
-import { ALIVE as A, DEAD as D, Matrix } from "@/types/life";
-import { ref } from "vue";
+import { useGame } from "@/composables/game";
+import { Matrix } from "@/types/life";
+import { plannerCannon } from "@/utils/matrices";
+import { computed, ref } from "vue";
 
-const planner: Matrix = [
-  [D, D, D, D, D],
-  [D, D, A, D, D],
-  [D, D, D, A, D],
-  [D, A, A, A, D],
-  [D, D, D, D, D],
-];
-
-// prettier-ignore
-const plannerCannon: Matrix = [
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0],
-    [0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-];
-
-const turnSignal: Matrix = [
-  [D, D, D],
-  [A, A, A],
-  [D, D, D],
-];
-
+const { game } = useGame();
 const matrix = ref<Matrix>(plannerCannon);
 
-startGame(matrix.value, (newMatrix) => (matrix.value = newMatrix));
+game.value
+  .start(matrix.value)
+  .onMatrixUpdate((newMatrix) => (matrix.value = newMatrix));
+
+const gameFrameInterval = computed({
+  get() {
+    return game.value.frameMsInterval;
+  },
+  set(value: number) {
+    game.value.setFrameInterval(value);
+  },
+});
+
+const isMenuOpen = ref<boolean>(false);
 </script>
 
 <template>
   <MatrixGrid :matrix="matrix" />
+  <section
+    class="absolute z-50 left-0 top-0 flex flex-col gap-2 p-2 items-start bg-white"
+  >
+    <button @click="isMenuOpen = !isMenuOpen" class="px-4 py-2">
+      {{ isMenuOpen ? "Close menu" : "Open menu" }}
+    </button>
+
+    <div v-show="isMenuOpen" class="flex flex-col gap-4 p-2 items-start">
+      <button
+        class="px-4 py-2 border border-black"
+        @click="game.isPlaying ? game.pause() : game.play()"
+      >
+        {{ game.isPlaying ? "Pause" : "Play" }}
+      </button>
+      <label>
+        <span class="block mb-2">Frame interval (ms)</span>
+        <input
+          class="block w-auto px-4 py-2 border border-black"
+          type="number"
+          v-model.number="gameFrameInterval"
+        />
+      </label>
+    </div>
+  </section>
 </template>

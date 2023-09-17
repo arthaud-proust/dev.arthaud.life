@@ -1,69 +1,79 @@
 /**
  * Separation of Concerns Principle :
- * Here should only appear code related to game start, run and display.
+ * Here should only appear code related to game start, run, stop, speed.
  */
-import { ALIVE, DEAD, Matrix } from "@/types/life";
 
-import { getNextStepCellState } from "@/rules/life.ts";
+import { getNextMatrix } from "@/rules/turn";
+import { Matrix } from "@/types/life";
 
-const FRAME_INTERVAL = 100;
+export class Game {
+  matrix: Matrix;
+  frameMsInterval: number;
+  isPlaying: boolean;
+  _playingInterval: null | ReturnType<typeof setInterval>;
+  _onMatrixUpdateCallback: null | ((newMatrix: Matrix) => any);
 
-export function matrixToString(matrix: Matrix): string {
-  return matrix
-    .map((row) => row.map((cell) => (cell === ALIVE ? "■" : " ")).join("  "))
-    .join("\n");
-}
-
-export function getNextMatrix(matrix: Matrix): Matrix {
-  const extendedMatrix = getExtendedMatrix(matrix);
-
-  return extendedMatrix.map((row, y) =>
-    row.map((_cell, x) => getNextStepCellState(matrix, [x, y])),
-  );
-}
-
-export function getExtendedMatrix(matrix: Matrix): Matrix {
-  // extend a matrix side if its border contain an alive ceil
-
-  // top side
-  const FIRST_ROW = 0;
-  if (matrix[FIRST_ROW].some((ceilState) => ceilState === ALIVE)) {
-    matrix.unshift(Array(matrix[FIRST_ROW].length).fill(DEAD));
+  constructor() {
+    this.matrix = [];
+    this.frameMsInterval = 100;
+    this.isPlaying = false;
+    this._playingInterval = null;
+    this._onMatrixUpdateCallback = null;
   }
 
-  // bottom side
-  const LAST_ROW = matrix.length - 1;
-  if (matrix[LAST_ROW].some((ceilState) => ceilState === ALIVE)) {
-    matrix.push(Array(matrix[LAST_ROW].length).fill(DEAD));
+  start(matrix: Matrix): this {
+    this.matrix = matrix;
+
+    this.play();
+
+    return this;
   }
 
-  // left side
-  const FIRST_CELL_OF_ROW = 0;
-  if (matrix.some((row) => row[FIRST_CELL_OF_ROW] === ALIVE)) {
-    matrix.forEach((row) => row.unshift(DEAD));
+  setFrameInterval(ms: number): this {
+    this.frameMsInterval = ms;
+    this.pause();
+    this.play();
+
+    return this;
   }
 
-  // right side
-  const LAST_CELL_OF_ROW = matrix[FIRST_ROW].length - 1;
-  if (matrix.some((row) => row[LAST_CELL_OF_ROW] === ALIVE)) {
-    matrix.forEach((row) => row.push(DEAD));
+  play(): this {
+    this.isPlaying = true;
+
+    this._playingInterval = setInterval(() => {
+      if (!this.isPlaying) {
+        return;
+      }
+
+      this._makeTurn();
+    }, this.frameMsInterval);
+
+    return this;
   }
 
-  return matrix;
-}
+  pause(): this {
+    this.isPlaying = false;
 
-// function displayMatrix(matrix: Matrix) {
-//   console.clear();
-//   console.log(matrixToString(matrix));
-// }
+    if (this._playingInterval) {
+      clearInterval(this._playingInterval);
+    }
 
-export function startGame(matrix: Matrix, onUpdate: (matrix: Matrix) => void) {
-  // displayMatrix(matrix);
+    return this;
+  }
 
-  setInterval(() => {
-    matrix = getNextMatrix(matrix);
+  _makeTurn(): this {
+    this.matrix = getNextMatrix(this.matrix);
 
-    // displayMatrix(matrix);
-    onUpdate(matrix);
-  }, FRAME_INTERVAL);
+    if (this._onMatrixUpdateCallback) {
+      this._onMatrixUpdateCallback(this.matrix);
+    }
+
+    return this;
+  }
+
+  onMatrixUpdate(callback: (newMatrix: Matrix) => any): this {
+    this._onMatrixUpdateCallback = callback;
+
+    return this;
+  }
 }
