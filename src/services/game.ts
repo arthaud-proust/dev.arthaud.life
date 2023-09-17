@@ -11,14 +11,12 @@ export class Game {
   frameMsInterval: number;
   isPlaying: boolean;
   _playingInterval: null | ReturnType<typeof setInterval>;
-  _onMatrixUpdateCallback: null | ((newMatrix: Matrix) => any);
 
   constructor() {
     this.matrix = [];
     this.frameMsInterval = 100;
     this.isPlaying = false;
     this._playingInterval = null;
-    this._onMatrixUpdateCallback = null;
   }
 
   start(matrix: Matrix): this {
@@ -63,16 +61,6 @@ export class Game {
 
   _makeTurn(): this {
     this.matrix = getNextMatrix(this.matrix);
-
-    if (this._onMatrixUpdateCallback) {
-      this._onMatrixUpdateCallback(this.matrix);
-    }
-
-    return this;
-  }
-
-  onMatrixUpdate(callback: (newMatrix: Matrix) => any): this {
-    this._onMatrixUpdateCallback = callback;
 
     return this;
   }

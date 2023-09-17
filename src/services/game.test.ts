@@ -44,18 +44,3 @@ test("should change matrix if playing", async () => {
 
   expect(game.matrix).not.toStrictEqual(startMatrix);
 });
-
-test("should call onMatrixUpdate when matrix updated", async () => {
-  const game = new Game();
-  const startMatrix: Matrix = [[ALIVE, DEAD]];
-  const frameInterval = 10;
-
-  let test = false;
-
-  game.onMatrixUpdate(() => (test = true));
-  game.setFrameInterval(frameInterval).start(startMatrix);
-
-  await delay(frameInterval + 1);
-
-  expect(test).toBe(true);
-});

@@ -1,16 +1,12 @@
 <script setup lang="ts">
 import MatrixGrid from "@/components/MatrixGrid.vue";
 import { useGame } from "@/composables/game";
-import { Matrix } from "@/types/life";
 import { plannerCannon } from "@/utils/matrices";
 import { computed, ref } from "vue";
 
 const { game } = useGame();
-const matrix = ref<Matrix>(plannerCannon);
 
-game.value
-  .start(matrix.value)
-  .onMatrixUpdate((newMatrix) => (matrix.value = newMatrix));
+game.value.start(plannerCannon);
 
 const gameFrameInterval = computed({
   get() {
@@ -25,7 +21,7 @@ const isMenuOpen = ref<boolean>(false);
 </script>
 
 <template>
-  <MatrixGrid :matrix="matrix" />
+  <MatrixGrid :matrix="game.matrix" />
   <section
     class="absolute z-50 left-0 top-0 flex flex-col gap-2 p-2 items-start bg-white"
   >
