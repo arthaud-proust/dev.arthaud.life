@@ -13,9 +13,9 @@ const ALIVE_NEIGHBORS_CELLS_COUNT_TO_BORN = 3;
 const ALIVE_NEIGHBORS_CELLS_COUNT_TO_LIVE = [2, 3];
 
 
-function getNextStepCellState(mat, [x, y]) {
-    const ceilState = getCellState(mat, [x, y]);
-    const neighborsCellStates = getNeighborsCellStates(mat, [x, y]);
+function getNextStepCellState(matrix, [x, y]) {
+    const ceilState = getCellState(matrix, [x, y]);
+    const neighborsCellStates = getNeighborsCellStates(matrix, [x, y]);
 
     const aliveNeighborsCells = neighborsCellStates.filter(ceilState => ceilState === ALIVE).length;
 
@@ -36,17 +36,17 @@ function getNextStepCellState(mat, [x, y]) {
     return DEAD;
 }
 
-function getNeighborsCellStates(mat, [x, y]) {
-    const topLeft = getCellState(mat, [x - 1, y - 1]);
-    const topCenter = getCellState(mat, [x, y - 1]);
-    const topRight = getCellState(mat, [x + 1, y - 1]);
+function getNeighborsCellStates(matrix, [x, y]) {
+    const topLeft = getCellState(matrix, [x - 1, y - 1]);
+    const topCenter = getCellState(matrix, [x, y - 1]);
+    const topRight = getCellState(matrix, [x + 1, y - 1]);
 
-    const midLeft = getCellState(mat, [x - 1, y]);
-    const midRight = getCellState(mat, [x + 1, y]);
+    const midLeft = getCellState(matrix, [x - 1, y]);
+    const midRight = getCellState(matrix, [x + 1, y]);
 
-    const bottomLeft = getCellState(mat, [x - 1, y + 1]);
-    const bottomCenter = getCellState(mat, [x, y + 1]);
-    const bottomRight = getCellState(mat, [x + 1, y + 1]);
+    const bottomLeft = getCellState(matrix, [x - 1, y + 1]);
+    const bottomCenter = getCellState(matrix, [x, y + 1]);
+    const bottomRight = getCellState(matrix, [x + 1, y + 1]);
 
     return [
         topLeft,
@@ -60,12 +60,14 @@ function getNeighborsCellStates(mat, [x, y]) {
     ];
 }
 
-function getCellState(mat, [x, y]) {
-    return mat[x]?.[y] ?? DEAD;
+function getCellState(matrix, [x, y]) {
+    return matrix[y]?.[x] ?? DEAD;
 }
 
 module.exports = {
     ALIVE,
     DEAD,
+    getCellState,
+    getNeighborsCellStates,
     getNextStepCellState
 }

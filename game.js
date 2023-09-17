@@ -5,59 +5,66 @@
 
 const {DEAD, getNextStepCellState, ALIVE} = require("./life.js");
 
-const FRAME_INTERVAL = 500;
+const FRAME_INTERVAL = 1500;
 
-let mat = [
-    [DEAD, DEAD, DEAD, DEAD, DEAD],
-    [DEAD, DEAD, DEAD, DEAD, DEAD],
-    [DEAD, DEAD, ALIVE, ALIVE, ALIVE],
-    [DEAD, DEAD, ALIVE, DEAD, DEAD],
-    [DEAD, DEAD, DEAD, ALIVE, DEAD],
-];
-
-function printMat(mat) {
-    console.clear()
-    console.log(mat.map(row => row.map(ceil => ceil === ALIVE ? "■" : "□").join('  ')).join("\n"))
+function matrixToString(matrix) {
+    return matrix.map(row =>
+        row.map(ceil => ceil === ALIVE ? "■" : "□").join('  ')
+    ).join("\n")
 }
 
-function getNextMat(mat) {
-    const extendedMat = extendMat(mat);
+function getNextMatrix(matrix) {
+    const extendedMatrix = getExtendedMatrix(matrix);
 
-    return extendedMat.map((row, x) =>
-        row.map((ceil, y) =>
-            getNextStepCellState(mat, [x, y])
+    return extendedMatrix.map((row, y) =>
+        row.map((ceil, x) =>
+            getNextStepCellState(matrix, [x, y])
         )
     )
 }
 
-function extendMat(mat) {
-    // extend a mat side if its border contain an alive ceil
+function getExtendedMatrix(matrix) {
+    // extend a matrix side if its border contain an alive ceil
 
     // top
-    if (mat[0].some(ceilState => ceilState === ALIVE)) {
-        mat.unshift(Array(mat[0].length).fill(DEAD))
+    if (matrix[0].some(ceilState => ceilState === ALIVE)) {
+        matrix.unshift(Array(matrix[0].length).fill(DEAD))
     }
 
     // bottom
-    if (mat[mat.length - 1].some(ceilState => ceilState === ALIVE)) {
-        mat.push(Array(mat[mat.length - 1].length).fill(DEAD));
+    if (matrix[matrix.length - 1].some(ceilState => ceilState === ALIVE)) {
+        matrix.push(Array(matrix[matrix.length - 1].length).fill(DEAD));
     }
 
     // left
-    if (mat.some(row => row[0] === ALIVE)) {
-        mat.forEach(row => row.unshift(DEAD));
+    if (matrix.some(row => row[0] === ALIVE)) {
+        matrix.forEach(row => row.unshift(DEAD));
     }
 
     // right
-    if (mat.some(row => row[row.length - 1] === ALIVE)) {
-        mat.forEach(row => row.push(DEAD));
+    if (matrix.some(row => row[row.length - 1] === ALIVE)) {
+        matrix.forEach(row => row.push(DEAD));
     }
 
-    return mat
+    return matrix
 }
 
-setInterval(() => {
-    mat = getNextMat(mat);
+function startGame(matrix) {
+    console.clear()
+    console.log(matrixToString(matrix));
 
-    printMat(mat)
-}, FRAME_INTERVAL);
+    setInterval(() => {
+        matrix = getNextMatrix(matrix);
+
+        console.clear()
+        console.log(matrixToString(matrix));
+    }, FRAME_INTERVAL);
+}
+
+
+module.exports = {
+    getExtendedMatrix,
+    getNextMatrix,
+    matrixToString,
+    startGame
+}

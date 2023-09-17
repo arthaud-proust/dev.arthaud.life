@@ -2,10 +2,10 @@
   "name": "life",
   "version": "1.0.0",
   "description": "Life Game in JS",
-  "main": "game.js",
+  "main": "main.js",
   "scripts": {
-    "start": "node game.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node main.js",
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/arthaud-proust/dev.arthaud.life/issues"
   },
-  "homepage": "https://github.com/arthaud-proust/dev.arthaud.life#readme"
+  "homepage": "https://github.com/arthaud-proust/dev.arthaud.life#readme",
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
 }
