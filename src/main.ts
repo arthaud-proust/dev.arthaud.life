@@ -1,19 +1,4 @@
-import {startGame} from "./services/game";
-import {ALIVE as A, DEAD as D, Matrix} from "./types/life";
+import {createApp} from 'vue'
+import App from './App.vue'
 
-
-let planner: Matrix = [
-    [D, D, D, D, D],
-    [D, D, A, D, D],
-    [D, D, D, A, D],
-    [D, A, A, A, D],
-    [D, D, D, D, D],
-];
-
-const turnSignal: Matrix = [
-    [D, D, D],
-    [A, A, A],
-    [D, D, D],
-];
-
-startGame(planner);
+createApp(App).mount('#app')
