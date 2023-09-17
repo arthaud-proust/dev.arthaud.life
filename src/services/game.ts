@@ -6,7 +6,7 @@ import { ALIVE, DEAD, Matrix } from "../types/life";
 
 import { getNextStepCellState } from "../rules/life.ts";
 
-const FRAME_INTERVAL = 500;
+const FRAME_INTERVAL = 100;
 
 export function matrixToString(matrix: Matrix): string {
   return matrix
@@ -52,17 +52,18 @@ export function getExtendedMatrix(matrix: Matrix): Matrix {
   return matrix;
 }
 
-function displayMatrix(matrix: Matrix) {
-  console.clear();
-  console.log(matrixToString(matrix));
-}
+// function displayMatrix(matrix: Matrix) {
+//   console.clear();
+//   console.log(matrixToString(matrix));
+// }
 
-export function startGame(matrix: Matrix) {
-  displayMatrix(matrix);
+export function startGame(matrix: Matrix, onUpdate: (matrix: Matrix) => void) {
+  // displayMatrix(matrix);
 
   setInterval(() => {
     matrix = getNextMatrix(matrix);
 
-    displayMatrix(matrix);
+    // displayMatrix(matrix);
+    onUpdate(matrix);
   }, FRAME_INTERVAL);
 }
