@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import "./styles.css";
-import {startGame} from "./services/game";
-import {ALIVE as A, DEAD as D, Matrix} from "./types/life";
-
+import { startGame } from "./services/game";
+import { ALIVE as A, DEAD as D, Matrix } from "./types/life";
 
 let planner: Matrix = [
   [D, D, D, D, D],
@@ -21,6 +20,4 @@ const turnSignal: Matrix = [
 startGame(planner);
 </script>
 
-<template>
-  Open console to see life game
-</template>
+<template>Open console to see life game</template>
