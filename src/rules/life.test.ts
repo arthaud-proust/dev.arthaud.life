@@ -1,14 +1,14 @@
-const {
-  DEAD,
-  ALIVE,
-  getNextStepCellState,
+import { ALIVE, DEAD, Matrix } from "../types/life.ts";
+
+import {
   getCellState,
   getNeighborsCellStates,
-} = require("./life.ts");
+  getNextStepCellState,
+} from "./life.ts";
 
 describe("getCellState", () => {
   test("return cell state", () => {
-    const matrix = [
+    const matrix: Matrix = [
       [DEAD, ALIVE, DEAD],
       [DEAD, DEAD, DEAD],
       [DEAD, DEAD, DEAD],
@@ -18,7 +18,7 @@ describe("getCellState", () => {
   });
 
   test("return dead if out of matrice", () => {
-    const matrix = [
+    const matrix: Matrix = [
       [DEAD, ALIVE, DEAD],
       [DEAD, DEAD, DEAD],
       [DEAD, DEAD, DEAD],
@@ -30,7 +30,7 @@ describe("getCellState", () => {
 
 describe("getNeighborsCellStates", () => {
   test("return top left state", () => {
-    const matrix = [
+    const matrix: Matrix = [
       [ALIVE, DEAD, DEAD],
       [DEAD, DEAD, DEAD],
       [DEAD, DEAD, DEAD],
@@ -40,7 +40,7 @@ describe("getNeighborsCellStates", () => {
   });
 
   test("return top center state", () => {
-    const matrix = [
+    const matrix: Matrix = [
       [DEAD, ALIVE, DEAD],
       [DEAD, DEAD, DEAD],
       [DEAD, DEAD, DEAD],
@@ -50,7 +50,7 @@ describe("getNeighborsCellStates", () => {
   });
 
   test("return top right state", () => {
-    const matrix = [
+    const matrix: Matrix = [
       [DEAD, DEAD, ALIVE],
       [DEAD, DEAD, DEAD],
       [DEAD, DEAD, DEAD],
@@ -60,7 +60,7 @@ describe("getNeighborsCellStates", () => {
   });
 
   test("return mid left state", () => {
-    const matrix = [
+    const matrix: Matrix = [
       [DEAD, DEAD, DEAD],
       [ALIVE, DEAD, DEAD],
       [DEAD, DEAD, DEAD],
@@ -70,7 +70,7 @@ describe("getNeighborsCellStates", () => {
   });
 
   test("return mid right state", () => {
-    const matrix = [
+    const matrix: Matrix = [
       [DEAD, DEAD, DEAD],
       [DEAD, DEAD, ALIVE],
       [DEAD, DEAD, DEAD],
@@ -80,7 +80,7 @@ describe("getNeighborsCellStates", () => {
   });
 
   test("return bottom left state", () => {
-    const matrix = [
+    const matrix: Matrix = [
       [DEAD, DEAD, DEAD],
       [DEAD, DEAD, DEAD],
       [ALIVE, DEAD, DEAD],
@@ -90,7 +90,7 @@ describe("getNeighborsCellStates", () => {
   });
 
   test("return bottom center state", () => {
-    const matrix = [
+    const matrix: Matrix = [
       [DEAD, DEAD, DEAD],
       [DEAD, DEAD, DEAD],
       [DEAD, ALIVE, DEAD],
@@ -100,7 +100,7 @@ describe("getNeighborsCellStates", () => {
   });
 
   test("return bottom right state", () => {
-    const matrix = [
+    const matrix: Matrix = [
       [DEAD, DEAD, DEAD],
       [DEAD, DEAD, DEAD],
       [DEAD, DEAD, ALIVE],
@@ -112,7 +112,7 @@ describe("getNeighborsCellStates", () => {
 
 describe("getNextStepCellState", () => {
   test("center cell should born", () => {
-    const matrix = [
+    const matrix: Matrix = [
       [DEAD, DEAD, ALIVE],
       [ALIVE, DEAD, DEAD],
       [DEAD, DEAD, ALIVE],
@@ -122,7 +122,7 @@ describe("getNextStepCellState", () => {
   });
 
   test("center cell should live", () => {
-    const matrix = [
+    const matrix: Matrix = [
       [DEAD, DEAD, ALIVE],
       [ALIVE, ALIVE, DEAD],
       [DEAD, DEAD, ALIVE],
@@ -130,17 +130,17 @@ describe("getNextStepCellState", () => {
 
     expect(getNextStepCellState(matrix, [1, 1])).toBe(ALIVE);
 
-    const mat2 = [
+    const matrix2: Matrix = [
       [DEAD, DEAD, DEAD],
       [ALIVE, ALIVE, DEAD],
       [DEAD, DEAD, ALIVE],
     ];
 
-    expect(getNextStepCellState(mat2, [1, 1])).toBe(ALIVE);
+    expect(getNextStepCellState(matrix2, [1, 1])).toBe(ALIVE);
   });
 
   test("center cell should die", () => {
-    const matrix = [
+    const matrix: Matrix = [
       [DEAD, ALIVE, ALIVE],
       [ALIVE, ALIVE, DEAD],
       [DEAD, DEAD, ALIVE],

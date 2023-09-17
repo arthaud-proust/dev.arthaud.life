@@ -1,13 +1,10 @@
-const { DEAD, ALIVE } = require("../rules/life.ts");
-const {
-  matrixToString,
-  getExtendedMatrix,
-  getNextMatrix,
-} = require("./game.ts");
+import { ALIVE, DEAD, Matrix } from "../types/life";
+
+import { getExtendedMatrix, getNextMatrix, matrixToString } from "./game.ts";
 
 describe("matToString", () => {
   test("should return formated cells", () => {
-    const matrix = [
+    const matrix: Matrix = [
       [DEAD, ALIVE, DEAD],
       [DEAD, DEAD, DEAD],
       [DEAD, DEAD, ALIVE],
@@ -19,7 +16,7 @@ describe("matToString", () => {
 
 describe("getExtendedMatrix", () => {
   test("should extend on all sides", () => {
-    const matrix = [
+    const matrix: Matrix = [
       [ALIVE, DEAD, DEAD],
       [DEAD, DEAD, DEAD],
       [DEAD, DEAD, ALIVE],
@@ -35,7 +32,7 @@ describe("getExtendedMatrix", () => {
   });
 
   test("should not extend matrice", () => {
-    const matrix = [
+    const matrix: Matrix = [
       [DEAD, DEAD, DEAD],
       [DEAD, ALIVE, DEAD],
       [DEAD, DEAD, DEAD],
@@ -51,7 +48,7 @@ describe("getExtendedMatrix", () => {
 
 describe("getNextMatrix", () => {
   test("should kill the alive cell", () => {
-    const matrix = [
+    const matrix: Matrix = [
       [DEAD, DEAD, DEAD],
       [DEAD, ALIVE, DEAD],
       [DEAD, DEAD, DEAD],
@@ -65,7 +62,7 @@ describe("getNextMatrix", () => {
   });
 
   test("make born new cell", () => {
-    const matrix = [
+    const matrix: Matrix = [
       [DEAD, DEAD, DEAD, DEAD, DEAD],
       [DEAD, DEAD, DEAD, DEAD, DEAD],
       [DEAD, ALIVE, ALIVE, ALIVE, DEAD],
