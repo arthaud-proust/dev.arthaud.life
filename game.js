@@ -9,7 +9,7 @@ const FRAME_INTERVAL = 1500;
 
 function matrixToString(matrix) {
     return matrix.map(row =>
-        row.map(ceil => ceil === ALIVE ? "■" : "□").join('  ')
+        row.map(ceil => ceil === ALIVE ? "■" : " ").join('  ')
     ).join("\n")
 }
 

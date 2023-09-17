@@ -9,7 +9,7 @@ describe('matToString', () => {
             [DEAD, DEAD, ALIVE],
         ]
 
-        expect(matrixToString(matrix)).toBe("□  ■  □\n□  □  □\n□  □  ■");
+        expect(matrixToString(matrix)).toBe("   ■   \n       \n      ■");
     })
 });
 
