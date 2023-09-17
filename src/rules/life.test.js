@@ -1,4 +1,4 @@
-const {DEAD, ALIVE, getNextStepCellState, getCellState, getNeighborsCellStates} = require("./life.js");
+const {DEAD, ALIVE, getNextStepCellState, getCellState, getNeighborsCellStates} = require("./life.ts");
 
 describe('getCellState', () => {
     test('return cell state', () => {

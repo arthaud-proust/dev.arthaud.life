@@ -1,5 +1,5 @@
-const {DEAD, ALIVE} = require("./life.js");
-const {matrixToString, getExtendedMatrix, getNextMatrix} = require("./game.js");
+const {DEAD, ALIVE} = require("../rules/life.ts");
+const {matrixToString, getExtendedMatrix, getNextMatrix} = require("./game.ts");
 
 describe('matToString', () => {
     test('should return formated cells', () => {

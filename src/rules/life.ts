@@ -4,16 +4,12 @@
  * Here should not appear code related to display, animations, startup state, etc.
  * So, only game rules in this file!
  */
-
-
-const DEAD = 0;
-const ALIVE = 1;
+import {ALIVE, CellCoords, CellState, DEAD, Matrix} from "../types/life";
 
 const ALIVE_NEIGHBORS_CELLS_COUNT_TO_BORN = 3;
 const ALIVE_NEIGHBORS_CELLS_COUNT_TO_LIVE = [2, 3];
 
-
-function getNextStepCellState(matrix, [x, y]) {
+export function getNextStepCellState(matrix: Matrix, [x, y]: CellCoords): CellState {
     const ceilState = getCellState(matrix, [x, y]);
     const neighborsCellStates = getNeighborsCellStates(matrix, [x, y]);
 
@@ -36,7 +32,7 @@ function getNextStepCellState(matrix, [x, y]) {
     return DEAD;
 }
 
-function getNeighborsCellStates(matrix, [x, y]) {
+export function getNeighborsCellStates(matrix: Matrix, [x, y]: CellCoords): Array<CellState> {
     const topLeft = getCellState(matrix, [x - 1, y - 1]);
     const topCenter = getCellState(matrix, [x, y - 1]);
     const topRight = getCellState(matrix, [x + 1, y - 1]);
@@ -60,14 +56,6 @@ function getNeighborsCellStates(matrix, [x, y]) {
     ];
 }
 
-function getCellState(matrix, [x, y]) {
+export function getCellState(matrix: Matrix, [x, y]: CellCoords): CellState {
     return matrix[y]?.[x] ?? DEAD;
-}
-
-module.exports = {
-    ALIVE,
-    DEAD,
-    getCellState,
-    getNeighborsCellStates,
-    getNextStepCellState
 }
