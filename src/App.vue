@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import "./styles.css";
 import {startGame} from "./services/game";
 import {ALIVE as A, DEAD as D, Matrix} from "./types/life";
 
