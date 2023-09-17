@@ -21,7 +21,11 @@ const isMenuOpen = ref<boolean>(false);
 </script>
 
 <template>
-  <MatrixGrid :matrix="game.matrix" />
+  <MatrixGrid
+    :matrix="game.matrix"
+    :can-edit="!game.isPlaying"
+    @toggle-cell-state="(cellCoords) => game.toggleCellState(cellCoords)"
+  />
   <section
     class="absolute z-50 left-0 top-0 flex flex-col gap-2 p-2 items-start bg-white"
   >

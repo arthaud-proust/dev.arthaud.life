@@ -44,3 +44,12 @@ test("should change matrix if playing", async () => {
 
   expect(game.matrix).not.toStrictEqual(startMatrix);
 });
+
+test("should toggle cell state", async () => {
+  const game = new Game();
+  const startMatrix: Matrix = [[ALIVE, DEAD]];
+
+  game.start(startMatrix).toggleCellState([0, 0]);
+
+  expect(game.matrix).toStrictEqual([[DEAD, DEAD]]);
+});
