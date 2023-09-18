@@ -67,6 +67,18 @@ export class Game {
     return this;
   }
 
+  killAllCells(): this {
+    this.matrix = this.matrix.map((row) => row.map((_cell) => DEAD));
+
+    return this;
+  }
+
+  bornAllCells(): this {
+    this.matrix = this.matrix.map((row) => row.map((_cell) => ALIVE));
+
+    return this;
+  }
+
   _makeTurn(): this {
     this.matrix = getNextMatrix(this.matrix);
 
