@@ -19,7 +19,7 @@ const emit = defineEmits<{
     <button
       v-show="canEdit"
       @click="emit('toggleState')"
-      class="absolute inset-0"
+      class="absolute top-0 left-0 h-full w-full"
     ></button>
     <div
       v-show="canEdit"
