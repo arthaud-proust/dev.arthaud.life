@@ -21,7 +21,11 @@ const isMenuOpen = ref<boolean>(false);
 </script>
 
 <template>
-  <MatrixGrid :matrix="game.matrix" />
+  <MatrixGrid
+    :matrix="game.matrix"
+    :can-edit="!game.isPlaying"
+    @toggle-cell-state="(cellCoords) => game.toggleCellState(cellCoords)"
+  />
   <section
     class="absolute z-50 left-0 top-0 flex flex-col gap-2 p-2 items-start bg-white"
   >
@@ -36,10 +40,27 @@ const isMenuOpen = ref<boolean>(false);
       >
         {{ game.isPlaying ? "Pause" : "Play" }}
       </button>
-      <label>
-        <span class="block mb-2">Frame interval (ms)</span>
+
+      <div v-show="!game.isPlaying" class="flex flex-col gap-2">
+        <span>Cells edition</span>
+        <button
+          class="px-4 py-2 border border-black"
+          @click="game.killAllCells"
+        >
+          Kill all
+        </button>
+        <button
+          class="px-4 py-2 border border-black"
+          @click="game.bornAllCells"
+        >
+          Born all
+        </button>
+      </div>
+
+      <label class="flex flex-col gap-2">
+        <span>Frame interval (ms)</span>
         <input
-          class="block w-auto px-4 py-2 border border-black"
+          class="w-auto px-4 py-2 border border-black"
           type="number"
           v-model.number="gameFrameInterval"
         />

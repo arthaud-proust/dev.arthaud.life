@@ -4,7 +4,7 @@
  */
 
 import { getNextMatrix } from "@/rules/turn";
-import { Matrix } from "@/types/life";
+import { ALIVE, CellCoords, CellState, DEAD, Matrix } from "@/types/life";
 
 export class Game {
   matrix: Matrix;
@@ -55,6 +55,26 @@ export class Game {
     if (this._playingInterval) {
       clearInterval(this._playingInterval);
     }
+
+    return this;
+  }
+
+  toggleCellState(cellCoords: CellCoords): this {
+    const cellState: CellState = this.matrix[cellCoords[1]][cellCoords[0]];
+    this.matrix[cellCoords[1]][cellCoords[0]] =
+      cellState === ALIVE ? DEAD : ALIVE;
+
+    return this;
+  }
+
+  killAllCells(): this {
+    this.matrix = this.matrix.map((row) => row.map((_cell) => DEAD));
+
+    return this;
+  }
+
+  bornAllCells(): this {
+    this.matrix = this.matrix.map((row) => row.map((_cell) => ALIVE));
 
     return this;
   }

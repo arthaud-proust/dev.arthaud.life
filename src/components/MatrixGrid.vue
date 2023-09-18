@@ -1,15 +1,20 @@
 <script setup lang="ts">
 import Cell from "@/components/Cell.vue";
-import { Matrix } from "@/types/life";
+import { CellCoords, Matrix } from "@/types/life";
 import { useElementSize } from "@vueuse/core";
 import { ref } from "vue";
 
 defineProps<{
   matrix: Matrix;
+  canEdit: boolean;
 }>();
 
 const container = ref();
 const containerSize = useElementSize(container);
+
+const emit = defineEmits<{
+  toggleCellState: [cellCoords: CellCoords];
+}>();
 </script>
 
 <template>
@@ -29,7 +34,9 @@ const containerSize = useElementSize(container);
         <Cell
           v-for="(cellState, x) in row"
           :key="`${x}-${y}`"
+          :can-edit="canEdit"
           :state="cellState"
+          @toggle-state="() => emit('toggleCellState', [x, y])"
         />
       </div>
     </div>

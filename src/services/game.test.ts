@@ -44,3 +44,42 @@ test("should change matrix if playing", async () => {
 
   expect(game.matrix).not.toStrictEqual(startMatrix);
 });
+
+test("can toggle cell state", async () => {
+  const game = new Game();
+  const startMatrix: Matrix = [[ALIVE, DEAD]];
+
+  game.start(startMatrix).toggleCellState([0, 0]);
+
+  expect(game.matrix).toStrictEqual([[DEAD, DEAD]]);
+});
+
+test("can kill all cells", async () => {
+  const game = new Game();
+  const startMatrix: Matrix = [
+    [ALIVE, DEAD],
+    [DEAD, ALIVE],
+  ];
+
+  game.start(startMatrix).killAllCells();
+
+  expect(game.matrix).toStrictEqual([
+    [DEAD, DEAD],
+    [DEAD, DEAD],
+  ]);
+});
+
+test("can born all cells", async () => {
+  const game = new Game();
+  const startMatrix: Matrix = [
+    [ALIVE, DEAD],
+    [DEAD, ALIVE],
+  ];
+
+  game.start(startMatrix).bornAllCells();
+
+  expect(game.matrix).toStrictEqual([
+    [ALIVE, ALIVE],
+    [ALIVE, ALIVE],
+  ]);
+});
