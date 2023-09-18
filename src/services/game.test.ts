@@ -1,6 +1,6 @@
-import { ALIVE, DEAD, Matrix } from "@/types/life";
+import { Game } from "@/services/game";
+import { ALIVE, DEAD, Matrix } from "@/types";
 import { delay } from "@/utils/delay";
-import { Game } from "./game";
 
 test("should play when start game", () => {
   const game = new Game();

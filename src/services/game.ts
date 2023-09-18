@@ -3,8 +3,8 @@
  * Here should only appear code related to game start, run, stop, speed.
  */
 
-import { getNextMatrix } from "@/rules/turn";
-import { ALIVE, CellCoords, CellState, DEAD, Matrix } from "@/types/life";
+import { getNextMatrix } from "@/rules/matrix";
+import { ALIVE, CellCoords, CellState, DEAD, Matrix } from "@/types";
 
 export class Game {
   matrix: Matrix;

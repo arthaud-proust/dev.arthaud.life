@@ -4,7 +4,7 @@
  * Here should not appear code related to display, animations, startup state, etc.
  * So, only game rules in this file!
  */
-import { ALIVE, CellCoords, CellState, DEAD, Matrix } from "@/types/life";
+import { ALIVE, CellCoords, CellState, DEAD, Matrix } from "@/types";
 
 const ALIVE_NEIGHBORS_CELLS_COUNT_TO_BORN = 3;
 const ALIVE_NEIGHBORS_CELLS_COUNT_TO_LIVE = [2, 3];

@@ -1,4 +1,4 @@
-import { ALIVE as A, DEAD as D, Matrix } from "@/types/life";
+import { ALIVE as A, DEAD as D, Matrix } from "@/types";
 
 export const planner: Matrix = [
   [D, D, D, D, D],

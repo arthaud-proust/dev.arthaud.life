@@ -3,9 +3,9 @@
  * Here should only appear the turn game logic.
  */
 
-import { ALIVE, DEAD, Matrix } from "@/types/life";
+import { ALIVE, DEAD, Matrix } from "@/types";
 
-import { getNextStepCellState } from "@/rules/life.ts";
+import { getNextStepCellState } from "@/rules/cell";
 
 export function getNextMatrix(matrix: Matrix): Matrix {
   const extendedMatrix = getExtendedMatrix(matrix);

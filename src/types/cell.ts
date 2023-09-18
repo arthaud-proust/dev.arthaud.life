@@ -4,5 +4,3 @@ export const ALIVE = 1;
 export type CellState = typeof DEAD | typeof ALIVE;
 
 export type CellCoords = [number, number];
-
-export type Matrix = Array<Array<CellState>>;

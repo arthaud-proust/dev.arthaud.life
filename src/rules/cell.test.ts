@@ -1,10 +1,10 @@
-import { ALIVE, DEAD, Matrix } from "@/types/life.ts";
+import { ALIVE, DEAD, Matrix } from "@/types";
 
 import {
   getCellState,
   getNeighborsCellStates,
   getNextStepCellState,
-} from "./life.ts";
+} from "@/rules/cell.ts";
 
 describe("getCellState", () => {
   test("return cell state", () => {

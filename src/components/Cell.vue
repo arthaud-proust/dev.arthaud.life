@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ALIVE, CellState } from "@/types/life";
+import { ALIVE, CellState } from "@/types";
 
 defineProps<{
   state: CellState;
@@ -27,3 +27,4 @@ const emit = defineEmits<{
     ></div>
   </div>
 </template>
+@/types/matrix
