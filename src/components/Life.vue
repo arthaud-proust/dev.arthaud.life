@@ -2,22 +2,30 @@
 import MatrixGrid from "@/components/MatrixGrid.vue";
 import { useGame } from "@/composables/game";
 import { plannerCannon } from "@/utils/matrices";
-import { computed, ref } from "vue";
+import { Squares2X2Icon as Squares2X2IconOutline } from "@heroicons/vue/24/outline";
+import {
+  ClockIcon,
+  PauseIcon,
+  PlayIcon,
+  Squares2X2Icon as Squares2X2IconSolid,
+} from "@heroicons/vue/24/solid";
+import { ref, watch } from "vue";
 
 const { game } = useGame();
 
-game.value.start(plannerCannon);
+const speeds = [600, 250, 50];
+const speedIndex = ref(0);
 
-const gameFrameInterval = computed({
-  get() {
-    return game.value.frameMsInterval;
-  },
-  set(value: number) {
-    game.value.setFrameInterval(value);
-  },
+watch(speedIndex, (newValue: number) => {
+  game.value.setFrameInterval(speeds[newValue]);
 });
 
-const isMenuOpen = ref<boolean>(false);
+function setNextSpeed() {
+  speedIndex.value =
+    speedIndex.value + 1 === speeds.length ? 0 : speedIndex.value + 1;
+}
+
+game.value.start(plannerCannon).setFrameInterval(speeds[0]);
 </script>
 
 <template>
@@ -26,45 +34,44 @@ const isMenuOpen = ref<boolean>(false);
     :can-edit="!game.isPlaying"
     @toggle-cell-state="(cellCoords) => game.toggleCellState(cellCoords)"
   />
-  <section
-    class="absolute z-50 left-0 top-0 flex flex-col gap-2 p-2 items-start bg-white"
-  >
-    <button @click="isMenuOpen = !isMenuOpen" class="px-4 py-2">
-      {{ isMenuOpen ? "Close menu" : "Open menu" }}
+  <section class="absolute z-50 left-0 top-0 flex p-2 items-center">
+    <button
+      class="p-4"
+      @click="game.isPlaying ? game.pause() : game.play()"
+      :aria-label="game.isPlaying ? 'Pause game' : 'Play game'"
+    >
+      <PauseIcon v-if="game.isPlaying" class="h-4" />
+      <PlayIcon v-else class="h-4" />
     </button>
 
-    <div v-show="isMenuOpen" class="flex flex-col gap-4 p-2 items-start">
+    <button
+      v-if="game.isPlaying"
+      class="p-4 flex gap-2 items-center"
+      @click="setNextSpeed()"
+      :aria-label="
+        speedIndex + 1 === speeds.length ? 'Reset speed' : 'Increase speed'
+      "
+    >
+      <ClockIcon class="h-4" />
+      <span class="text-xs">x{{ speedIndex + 1 }}</span>
+    </button>
+
+    <template v-if="!game.isPlaying">
       <button
-        class="px-4 py-2 border border-black"
-        @click="game.isPlaying ? game.pause() : game.play()"
+        class="p-4"
+        @click="game.killAllCells"
+        aria-label="Kill all cells"
       >
-        {{ game.isPlaying ? "Pause" : "Play" }}
+        <Squares2X2IconOutline class="h-4" />
       </button>
 
-      <div v-show="!game.isPlaying" class="flex flex-col gap-2">
-        <span>Cells edition</span>
-        <button
-          class="px-4 py-2 border border-black"
-          @click="game.killAllCells"
-        >
-          Kill all
-        </button>
-        <button
-          class="px-4 py-2 border border-black"
-          @click="game.bornAllCells"
-        >
-          Born all
-        </button>
-      </div>
-
-      <label class="flex flex-col gap-2">
-        <span>Frame interval (ms)</span>
-        <input
-          class="w-auto px-4 py-2 border border-black"
-          type="number"
-          v-model.number="gameFrameInterval"
-        />
-      </label>
-    </div>
+      <button
+        class="p-4"
+        @click="game.bornAllCells"
+        aria-label="Born all cells"
+      >
+        <Squares2X2IconSolid class="h-4" />
+      </button>
+    </template>
   </section>
 </template>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Cell from "@/components/Cell.vue";
-import { CellCoords, Matrix } from "@/types/life";
+import { CellCoords, Matrix } from "@/types";
 import { useElementSize } from "@vueuse/core";
 import { ref } from "vue";
 
@@ -42,3 +42,4 @@ const emit = defineEmits<{
     </div>
   </article>
 </template>
+@/types/matrix

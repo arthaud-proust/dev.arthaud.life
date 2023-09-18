@@ -1,6 +1,6 @@
-import { ALIVE, DEAD, Matrix } from "@/types/life";
+import { ALIVE, DEAD, Matrix } from "@/types";
 
-import { getExtendedMatrix, getNextMatrix } from "@/rules/turn.ts";
+import { getExtendedMatrix, getNextMatrix } from "@/rules/matrix";
 
 describe("getExtendedMatrix", () => {
   test("should extend on all sides", () => {

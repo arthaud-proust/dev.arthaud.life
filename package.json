@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/arthaud-proust/dev.arthaud.life#readme",
   "dependencies": {
+    "@heroicons/vue": "^2.0.18",
     "@vueuse/core": "^10.4.1",
     "vue": "^3.3.4"
   },
