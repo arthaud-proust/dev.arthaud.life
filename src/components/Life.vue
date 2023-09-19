@@ -25,7 +25,7 @@ function setNextSpeed() {
     speedIndex.value + 1 === speeds.length ? 0 : speedIndex.value + 1;
 }
 
-game.value.start(plannerCannon).setFrameInterval(speeds[0]);
+game.value.init(plannerCannon).setFrameInterval(speeds[0]);
 </script>
 
 <template>
@@ -33,7 +33,33 @@ game.value.start(plannerCannon).setFrameInterval(speeds[0]);
     :matrix="game.matrix"
     :can-edit="!game.isPlaying"
     @toggle-cell-state="(cellCoords) => game.toggleCellState(cellCoords)"
-  />
+  >
+    <template #top>
+      <div
+        v-if="!game.hasStarted"
+        class="h-10 flex flex-col items-center justify-center mb-10"
+      >
+        <h1 class="text-xl">Edit cells by clicking on it. Then, play!</h1>
+        <p class="text-gray-500">Tip: you can zoom on the grid.</p>
+      </div>
+    </template>
+
+    <template #bottom>
+      <div
+        v-if="!game.hasStarted"
+        class="h-10 flex items-center justify-center mt-10"
+      >
+        <button
+          @click="game.play()"
+          class="flex items-center gap-2 text-white bg-black px-4 py-2 rounded"
+        >
+          <span>Play</span>
+          <PlayIcon class="h-4" />
+        </button>
+      </div>
+    </template>
+  </MatrixGrid>
+
   <section class="absolute z-50 left-0 top-0 flex p-2 items-center">
     <button
       class="p-4"
@@ -45,7 +71,7 @@ game.value.start(plannerCannon).setFrameInterval(speeds[0]);
     </button>
 
     <button
-      v-if="game.isPlaying"
+      v-if="game.hasStarted"
       class="p-4 flex gap-2 items-center"
       @click="setNextSpeed()"
       :aria-label="
@@ -56,7 +82,7 @@ game.value.start(plannerCannon).setFrameInterval(speeds[0]);
       <span class="text-xs">x{{ speedIndex + 1 }}</span>
     </button>
 
-    <template v-if="!game.isPlaying">
+    <template v-else>
       <button
         class="p-4"
         @click="game.killAllCells"

@@ -10,33 +10,41 @@ export class Game {
   matrix: Matrix;
   frameMsInterval: number;
   isPlaying: boolean;
+  hasStarted: boolean;
   _playingInterval: null | ReturnType<typeof setInterval>;
 
   constructor() {
     this.matrix = [];
     this.frameMsInterval = 100;
     this.isPlaying = false;
+    this.hasStarted = false;
     this._playingInterval = null;
   }
 
-  start(matrix: Matrix): this {
+  init(matrix: Matrix): this {
     this.matrix = matrix;
 
-    this.play();
+    this.pause();
 
     return this;
   }
 
   setFrameInterval(ms: number): this {
+    const wasPreviouslyPlaying = this.isPlaying;
+
     this.frameMsInterval = ms;
+
     this.pause();
-    this.play();
+    if (wasPreviouslyPlaying) {
+      this.play();
+    }
 
     return this;
   }
 
   play(): this {
     this.isPlaying = true;
+    this.hasStarted = true;
 
     this._playingInterval = setInterval(() => {
       if (!this.isPlaying) {

@@ -30,6 +30,8 @@ const emit = defineEmits<{
           : 'w-full'
       "
     >
+      <slot name="top"></slot>
+
       <div class="flex" v-for="(row, y) in matrix" :key="`${y}`">
         <Cell
           v-for="(cellState, x) in row"
@@ -39,6 +41,8 @@ const emit = defineEmits<{
           @toggle-state="() => emit('toggleCellState', [x, y])"
         />
       </div>
+
+      <slot name="bottom"></slot>
     </div>
   </article>
 </template>

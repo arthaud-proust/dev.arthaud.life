@@ -2,22 +2,46 @@ import { Game } from "@/services/game";
 import { ALIVE, DEAD, Matrix } from "@/types";
 import { delay } from "@/utils/delay";
 
-test("should play when start game", () => {
+test("should be paused when initiating game", () => {
   const game = new Game();
 
   const startMatrix: Matrix = [[ALIVE, DEAD]];
-  game.start(startMatrix);
+  game.init(startMatrix);
 
   expect(game.matrix).toStrictEqual(startMatrix);
-  expect(game.isPlaying).toBe(true);
+  expect(game.isPlaying).toBe(false);
 });
 
-test("should change frame interval", () => {
+test("should set hasStarted to true when playing", () => {
+  const game = new Game();
+
+  const startMatrix: Matrix = [[ALIVE, DEAD]];
+  game.init(startMatrix);
+
+  expect(game.hasStarted).toBe(false);
+
+  game.play();
+
+  expect(game.hasStarted).toBe(true);
+});
+
+test("should change frame interval and resuming if it was playing", () => {
+  const game = new Game();
+
+  const frameInterval = 1093892;
+  game.play().setFrameInterval(frameInterval);
+
+  expect(game.isPlaying).toBe(true);
+  expect(game.frameMsInterval).toStrictEqual(frameInterval);
+});
+
+test("should change frame interval without resume if it was paused", () => {
   const game = new Game();
 
   const frameInterval = 1093892;
   game.setFrameInterval(frameInterval);
 
+  expect(game.isPlaying).toBe(false);
   expect(game.frameMsInterval).toStrictEqual(frameInterval);
 });
 
@@ -26,7 +50,7 @@ test("should not change matrix if paused", async () => {
   const startMatrix: Matrix = [[ALIVE, DEAD]];
   const frameInterval = 10;
 
-  game.setFrameInterval(frameInterval).start(startMatrix).pause();
+  game.setFrameInterval(frameInterval).init(startMatrix);
 
   await delay(frameInterval + 1);
 
@@ -38,7 +62,7 @@ test("should change matrix if playing", async () => {
   const startMatrix: Matrix = [[ALIVE, DEAD]];
   const frameInterval = 10;
 
-  game.setFrameInterval(frameInterval).start(startMatrix);
+  game.setFrameInterval(frameInterval).init(startMatrix).play();
 
   await delay(frameInterval + 1);
 
@@ -49,7 +73,7 @@ test("can toggle cell state", async () => {
   const game = new Game();
   const startMatrix: Matrix = [[ALIVE, DEAD]];
 
-  game.start(startMatrix).toggleCellState([0, 0]);
+  game.init(startMatrix).toggleCellState([0, 0]);
 
   expect(game.matrix).toStrictEqual([[DEAD, DEAD]]);
 });
@@ -61,7 +85,7 @@ test("can kill all cells", async () => {
     [DEAD, ALIVE],
   ];
 
-  game.start(startMatrix).killAllCells();
+  game.init(startMatrix).killAllCells();
 
   expect(game.matrix).toStrictEqual([
     [DEAD, DEAD],
@@ -76,7 +100,7 @@ test("can born all cells", async () => {
     [DEAD, ALIVE],
   ];
 
-  game.start(startMatrix).bornAllCells();
+  game.init(startMatrix).bornAllCells();
 
   expect(game.matrix).toStrictEqual([
     [ALIVE, ALIVE],
