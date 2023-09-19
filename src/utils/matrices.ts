@@ -4,6 +4,30 @@ export function cloneMatrix(matrix: Matrix): Matrix {
   return Array.from(matrix.map((row) => Array.from(row)));
 }
 
+export const exampleRule1: Matrix = [
+  [D, D, D, D, D],
+  [D, D, A, D, D],
+  [D, D, D, D, D],
+  [D, A, D, A, D],
+  [D, D, D, D, D],
+];
+
+export const exampleRule2: Matrix = [
+  [D, D, D, D, D],
+  [D, D, D, A, D],
+  [D, D, A, D, D],
+  [D, A, D, D, D],
+  [D, D, D, D, D],
+];
+
+export const exampleRule3: Matrix = [
+  [D, D, D, D, D],
+  [D, D, D, D, D],
+  [D, D, A, D, D],
+  [D, D, D, D, D],
+  [D, D, D, D, D],
+];
+
 export const planner: Matrix = [
   [D, D, D, D, D],
   [D, D, A, D, D],

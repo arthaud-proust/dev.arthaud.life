@@ -1,12 +1,14 @@
 <script setup lang="ts">
-import Cell from "@/components/Cell.vue";
+import Cell from "@/components/Game/Cell.vue";
 import { CellCoords, Matrix } from "@/types";
 import { useElementSize } from "@vueuse/core";
 import { ref } from "vue";
 
 defineProps<{
   matrix: Matrix;
-  canEdit: boolean;
+  canEdit?: boolean;
+  showGrid?: boolean;
+  cellsTransition?: boolean;
 }>();
 
 const container = ref();
@@ -18,32 +20,38 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <article
-    ref="container"
-    class="h-screen w-screen flex justify-center overflow-hidden"
+  <div
+    class="aspect-square flex flex-col justify-center"
+    :class="
+      containerSize.height.value < containerSize.width.value
+        ? 'h-full'
+        : 'w-full'
+    "
   >
-    <div
-      class="aspect-square flex flex-col justify-center"
-      :class="
-        containerSize.height.value < containerSize.width.value
-          ? 'h-full'
-          : 'w-full'
-      "
-    >
-      <slot name="top"></slot>
+    <slot name="top"></slot>
 
-      <div class="flex" v-for="(row, y) in matrix" :key="`${y}`">
+    <div
+      class="flex flex-col justify-center"
+      :class="{ 'bg-black gap-px': showGrid }"
+    >
+      <div
+        class="flex"
+        :class="{ 'gap-px': showGrid }"
+        v-for="(row, y) in matrix"
+        :key="`${y}`"
+      >
         <Cell
           v-for="(cellState, x) in row"
           :key="`${x}-${y}`"
           :can-edit="canEdit"
           :state="cellState"
+          :transition="cellsTransition"
           @toggle-state="() => emit('toggleCellState', [x, y])"
         />
       </div>
-
-      <slot name="bottom"></slot>
     </div>
-  </article>
+
+    <slot name="bottom"></slot>
+  </div>
 </template>
 @/types/matrix

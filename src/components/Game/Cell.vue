@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { ALIVE, CellState } from "@/types";
+import { ALIVE, CellState, DEAD } from "@/types";
 
 defineProps<{
   state: CellState;
-  canEdit: boolean;
+  canEdit?: boolean;
+  transition?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -14,7 +15,11 @@ const emit = defineEmits<{
 <template>
   <div
     class="relative aspect-square w-full"
-    :class="state === ALIVE ? 'bg-black' : 'bg-white'"
+    :class="{
+      'bg-white': state === DEAD,
+      'bg-black': state === ALIVE,
+      'transition-colors duration-700': transition,
+    }"
   >
     <button
       v-show="canEdit"

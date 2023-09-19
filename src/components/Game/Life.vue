@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import MatrixGrid from "@/components/MatrixGrid.vue";
+import MatrixGrid from "@/components/Game/MatrixGrid.vue";
 import { useGame } from "@/composables/game";
 import { plannerCannon } from "@/utils/matrices";
 import { Squares2X2Icon as Squares2X2IconOutline } from "@heroicons/vue/24/outline";
@@ -31,40 +31,43 @@ game.value.init(plannerCannon).setFrameInterval(speeds[0]);
 </script>
 
 <template>
-  <MatrixGrid
-    :matrix="game.matrix"
-    :can-edit="!game.isPlaying"
-    @toggle-cell-state="(cellCoords) => game.toggleCellState(cellCoords)"
+  <article
+    ref="container"
+    class="h-screen w-screen flex justify-center overflow-hidden"
   >
-    <template #top>
-      <div
-        v-if="!game.hasStarted"
-        class="h-10 flex flex-col items-center justify-center mb-10 md:mb-14"
-      >
-        <h1 class="text-xl">Edit cells by clicking on it. Then, play!</h1>
-        <p class="text-gray-500">Tip: you can zoom on the grid.</p>
-      </div>
-    </template>
-
-    <template #bottom>
-      <div
-        v-if="!game.hasStarted"
-        class="h-10 flex items-center justify-center mt-10 md:mt-14"
-      >
-        <button
-          @click="game.play()"
-          class="flex items-center gap-2 text-white bg-black px-4 py-2 rounded"
+    <MatrixGrid
+      class="px-4"
+      :matrix="game.matrix"
+      :can-edit="!game.isPlaying"
+      @toggle-cell-state="(cellCoords) => game.toggleCellState(cellCoords)"
+    >
+      <template #top>
+        <div
+          v-if="!game.hasStarted"
+          class="h-10 flex flex-col items-center justify-center mb-10 md:mb-14"
         >
-          <span>Play</span>
-          <PlayIcon class="h-4" />
-        </button>
-      </div>
-    </template>
-  </MatrixGrid>
+          <h1 class="text-xl">Edit cells by clicking on it. Then, play!</h1>
+          <p class="text-gray-500">Tip: you can zoom on the grid.</p>
+        </div>
+      </template>
+
+      <template #bottom>
+        <div
+          v-if="!game.hasStarted"
+          class="h-10 flex items-center justify-center mt-10 md:mt-14"
+        >
+          <button @click="game.play()" class="button">
+            <span>Start the game</span>
+            <PlayIcon class="h-4" />
+          </button>
+        </div>
+      </template>
+    </MatrixGrid>
+  </article>
 
   <section class="absolute z-50 left-0 top-0 flex p-2 items-center">
     <button
-      class="p-4"
+      class="button-icon"
       @click="game.isPlaying ? game.pause() : game.play()"
       :aria-label="game.isPlaying ? 'Pause game' : 'Play game'"
     >
@@ -74,7 +77,7 @@ game.value.init(plannerCannon).setFrameInterval(speeds[0]);
 
     <template v-if="game.hasStarted">
       <button
-        class="p-4 flex gap-2 items-center"
+        class="button-icon"
         @click="setNextSpeed()"
         :aria-label="
           speedIndex + 1 === speeds.length ? 'Reset speed' : 'Increase speed'
@@ -84,18 +87,14 @@ game.value.init(plannerCannon).setFrameInterval(speeds[0]);
         <span class="text-xs">x{{ speedIndex + 1 }}</span>
       </button>
 
-      <button
-        class="p-4 flex gap-2 items-center"
-        @click="game.reset()"
-        aria-label="Reset game"
-      >
+      <button class="button-icon" @click="game.reset()" aria-label="Reset game">
         <ArrowPathIcon class="h-4" />
       </button>
     </template>
 
     <template v-else>
       <button
-        class="p-4"
+        class="button-icon"
         @click="game.killAllCells"
         aria-label="Kill all cells"
       >
@@ -103,7 +102,7 @@ game.value.init(plannerCannon).setFrameInterval(speeds[0]);
       </button>
 
       <button
-        class="p-4"
+        class="button-icon"
         @click="game.bornAllCells"
         aria-label="Born all cells"
       >
@@ -111,7 +110,7 @@ game.value.init(plannerCannon).setFrameInterval(speeds[0]);
       </button>
 
       <button
-        class="p-4"
+        class="button-icon"
         :class="{ 'text-gray-400': !game.canUndo }"
         @click="game.undo"
         aria-label="Undo"
