@@ -6,6 +6,7 @@
   "main": "main.js",
   "scripts": {
     "test": "jest",
+    "test:watch": "jest --watch",
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
