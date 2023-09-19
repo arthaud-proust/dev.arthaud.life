@@ -1,3 +1,24 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  .outline-focus {
+    @apply outline-2 outline-offset-2 outline-dashed outline-black;
+  }
+  .button {
+    @apply flex items-center gap-2 text-white bg-black border border-black px-4 py-2 rounded focus:outline-focus;
+  }
+
+  .button-secondary {
+    @apply button bg-white text-black;
+  }
+
+  .button-tertiary {
+    @apply button bg-white text-black border-transparent;
+  }
+
+  .button-icon {
+    @apply flex items-center gap-2 p-4 focus:outline-focus;
+  }
+}
