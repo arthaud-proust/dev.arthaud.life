@@ -78,6 +78,17 @@ test("can toggle cell state", async () => {
   expect(game.matrix).toStrictEqual([[DEAD, DEAD]]);
 });
 
+test("can undo toggle cell state", async () => {
+  const game = new Game();
+  const startMatrix: Matrix = [[ALIVE, DEAD]];
+
+  game.init(startMatrix).toggleCellState([0, 0]);
+
+  game.undo();
+
+  expect(game.matrix).toStrictEqual(startMatrix);
+});
+
 test("can kill all cells", async () => {
   const game = new Game();
   const startMatrix: Matrix = [
@@ -93,6 +104,20 @@ test("can kill all cells", async () => {
   ]);
 });
 
+test("can undo kill all cells", async () => {
+  const game = new Game();
+  const startMatrix: Matrix = [
+    [ALIVE, DEAD],
+    [DEAD, ALIVE],
+  ];
+
+  game.init(startMatrix).killAllCells();
+
+  game.undo();
+
+  expect(game.matrix).toStrictEqual(startMatrix);
+});
+
 test("can born all cells", async () => {
   const game = new Game();
   const startMatrix: Matrix = [
@@ -106,6 +131,31 @@ test("can born all cells", async () => {
     [ALIVE, ALIVE],
     [ALIVE, ALIVE],
   ]);
+});
+
+test("can undo born all cells", async () => {
+  const game = new Game();
+  const startMatrix: Matrix = [
+    [ALIVE, DEAD],
+    [DEAD, ALIVE],
+  ];
+
+  game.init(startMatrix).bornAllCells();
+
+  game.undo();
+
+  expect(game.matrix).toStrictEqual(startMatrix);
+});
+
+test("should be able to undo if matrix history", async () => {
+  const game = new Game();
+  const startMatrix: Matrix = [[ALIVE, DEAD]];
+
+  expect(game.canUndo).toBe(false);
+
+  game.init(startMatrix).toggleCellState([0, 0]);
+
+  expect(game.canUndo).toBe(true);
 });
 
 test("should pause game when reset", async () => {

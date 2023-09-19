@@ -5,6 +5,7 @@ import { plannerCannon } from "@/utils/matrices";
 import { Squares2X2Icon as Squares2X2IconOutline } from "@heroicons/vue/24/outline";
 import {
   ArrowPathIcon,
+  ArrowUturnLeftIcon,
   ClockIcon,
   PauseIcon,
   PlayIcon,
@@ -86,9 +87,7 @@ game.value.init(plannerCannon).setFrameInterval(speeds[0]);
       <button
         class="p-4 flex gap-2 items-center"
         @click="game.reset()"
-        :aria-label="
-          speedIndex + 1 === speeds.length ? 'Reset speed' : 'Increase speed'
-        "
+        aria-label="Reset game"
       >
         <ArrowPathIcon class="h-4" />
       </button>
@@ -109,6 +108,16 @@ game.value.init(plannerCannon).setFrameInterval(speeds[0]);
         aria-label="Born all cells"
       >
         <Squares2X2IconSolid class="h-4" />
+      </button>
+
+      <button
+        class="p-4"
+        :class="{ 'text-gray-400': !game.canUndo }"
+        @click="game.undo"
+        aria-label="Undo"
+        :disabled="!game.canUndo"
+      >
+        <ArrowUturnLeftIcon class="h-4" />
       </button>
     </template>
   </section>
