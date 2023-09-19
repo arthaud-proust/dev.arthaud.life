@@ -24,8 +24,8 @@ export class Game {
   }
 
   init(matrix: Matrix): this {
-    this._baseMatrix = matrix;
-    this.matrix = matrix;
+    this._baseMatrix = cloneMatrix(matrix);
+    this.matrix = cloneMatrix(matrix);
 
     this.pause();
 

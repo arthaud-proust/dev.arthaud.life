@@ -1,5 +1,9 @@
 import { ALIVE as A, DEAD as D, Matrix } from "@/types";
 
+export function cloneMatrix(matrix: Matrix): Matrix {
+  return JSON.parse(JSON.stringify(matrix));
+}
+
 export const planner: Matrix = [
   [D, D, D, D, D],
   [D, D, A, D, D],
