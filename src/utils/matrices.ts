@@ -1,7 +1,7 @@
 import { ALIVE as A, DEAD as D, Matrix } from "@/types";
 
 export function cloneMatrix(matrix: Matrix): Matrix {
-  return JSON.parse(JSON.stringify(matrix));
+  return Array.from(matrix.map((row) => Array.from(row)));
 }
 
 export const planner: Matrix = [
