@@ -107,3 +107,23 @@ test("can born all cells", async () => {
     [ALIVE, ALIVE],
   ]);
 });
+
+test("should pause game when reset", async () => {
+  const game = new Game();
+  const startMatrix: Matrix = [
+    [ALIVE, DEAD],
+    [DEAD, ALIVE],
+  ];
+
+  const frameInterval = 10;
+
+  game.setFrameInterval(frameInterval).init(startMatrix).play();
+
+  await delay(frameInterval + 1);
+
+  game.reset();
+
+  expect(game.matrix).toStrictEqual(startMatrix);
+  expect(game.isPlaying).toBe(false);
+  expect(game.hasStarted).toBe(false);
+});

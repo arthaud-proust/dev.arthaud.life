@@ -4,6 +4,7 @@ import { useGame } from "@/composables/game";
 import { plannerCannon } from "@/utils/matrices";
 import { Squares2X2Icon as Squares2X2IconOutline } from "@heroicons/vue/24/outline";
 import {
+  ArrowPathIcon,
   ClockIcon,
   PauseIcon,
   PlayIcon,
@@ -70,17 +71,28 @@ game.value.init(plannerCannon).setFrameInterval(speeds[0]);
       <PlayIcon v-else class="h-4" />
     </button>
 
-    <button
-      v-if="game.hasStarted"
-      class="p-4 flex gap-2 items-center"
-      @click="setNextSpeed()"
-      :aria-label="
-        speedIndex + 1 === speeds.length ? 'Reset speed' : 'Increase speed'
-      "
-    >
-      <ClockIcon class="h-4" />
-      <span class="text-xs">x{{ speedIndex + 1 }}</span>
-    </button>
+    <template v-if="game.hasStarted">
+      <button
+        class="p-4 flex gap-2 items-center"
+        @click="setNextSpeed()"
+        :aria-label="
+          speedIndex + 1 === speeds.length ? 'Reset speed' : 'Increase speed'
+        "
+      >
+        <ClockIcon class="h-4" />
+        <span class="text-xs">x{{ speedIndex + 1 }}</span>
+      </button>
+
+      <button
+        class="p-4 flex gap-2 items-center"
+        @click="game.reset()"
+        :aria-label="
+          speedIndex + 1 === speeds.length ? 'Reset speed' : 'Increase speed'
+        "
+      >
+        <ArrowPathIcon class="h-4" />
+      </button>
+    </template>
 
     <template v-else>
       <button

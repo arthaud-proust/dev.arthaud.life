@@ -7,6 +7,7 @@ import { getNextMatrix } from "@/rules/matrix";
 import { ALIVE, CellCoords, CellState, DEAD, Matrix } from "@/types";
 
 export class Game {
+  _baseMatrix: Matrix;
   matrix: Matrix;
   frameMsInterval: number;
   isPlaying: boolean;
@@ -14,6 +15,7 @@ export class Game {
   _playingInterval: null | ReturnType<typeof setInterval>;
 
   constructor() {
+    this._baseMatrix = [];
     this.matrix = [];
     this.frameMsInterval = 100;
     this.isPlaying = false;
@@ -22,6 +24,7 @@ export class Game {
   }
 
   init(matrix: Matrix): this {
+    this._baseMatrix = matrix;
     this.matrix = matrix;
 
     this.pause();
@@ -63,6 +66,15 @@ export class Game {
     if (this._playingInterval) {
       clearInterval(this._playingInterval);
     }
+
+    return this;
+  }
+
+  reset(): this {
+    this.matrix = this._baseMatrix;
+
+    this.pause();
+    this.hasStarted = false;
 
     return this;
   }
