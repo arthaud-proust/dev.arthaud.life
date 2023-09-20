@@ -1,6 +1,6 @@
 {
   "name": "life",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "description": "Life Game in JS",
   "type": "module",
   "main": "main.js",
