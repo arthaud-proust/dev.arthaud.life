@@ -85,8 +85,21 @@ test("can undo toggle cell state", async () => {
   game.init(startMatrix).toggleCellState([0, 0]);
 
   game.undo();
-
+ 
   expect(game.matrix).toStrictEqual(startMatrix);
+});
+
+test("can redo toggle cell state, then undo", async () => {
+  const game = new Game();
+  const startMatrix: Matrix = [[ALIVE, DEAD]];
+
+  game.init(startMatrix).toggleCellState([0, 0]);
+
+  game.undo();
+  game.redo();
+
+  expect(game.matrix).toStrictEqual([[DEAD, DEAD]]);
+  expect(game.canUndo).toBe(true);
 });
 
 test("can kill all cells", async () => {
@@ -118,6 +131,25 @@ test("can undo kill all cells", async () => {
   expect(game.matrix).toStrictEqual(startMatrix);
 });
 
+test("can redo kill all cells, then undo", async () => {
+  const game = new Game();
+  const startMatrix: Matrix = [
+    [ALIVE, DEAD],
+    [DEAD, ALIVE],
+  ];
+
+  game.init(startMatrix).killAllCells();
+
+  game.undo();
+  game.redo();
+
+  expect(game.matrix).toStrictEqual([
+    [DEAD, DEAD],
+    [DEAD, DEAD],
+  ]);
+  expect(game.canUndo).toBe(true);
+});
+
 test("can born all cells", async () => {
   const game = new Game();
   const startMatrix: Matrix = [
@@ -147,6 +179,25 @@ test("can undo born all cells", async () => {
   expect(game.matrix).toStrictEqual(startMatrix);
 });
 
+test("can redo born all cells, then undo", async () => {
+  const game = new Game();
+  const startMatrix: Matrix = [
+    [ALIVE, DEAD],
+    [DEAD, ALIVE],
+  ];
+
+  game.init(startMatrix).bornAllCells();
+
+  game.undo();
+  game.redo();
+
+  expect(game.matrix).toStrictEqual([
+    [ALIVE, ALIVE],
+    [ALIVE, ALIVE],
+  ]);
+  expect(game.canUndo).toBe(true);
+});
+
 test("should be able to undo if matrix history", async () => {
   const game = new Game();
   const startMatrix: Matrix = [[ALIVE, DEAD]];
@@ -156,6 +207,21 @@ test("should be able to undo if matrix history", async () => {
   game.init(startMatrix).toggleCellState([0, 0]);
 
   expect(game.canUndo).toBe(true);
+});
+
+test("should be able to redo if matrix undo history", async () => {
+  const game = new Game();
+  const startMatrix: Matrix = [[ALIVE, DEAD]];
+
+  expect(game.canRedo).toBe(false);
+
+  game.init(startMatrix).toggleCellState([0, 0]);
+
+  expect(game.canRedo).toBe(false);
+
+  game.undo();
+
+  expect(game.canRedo).toBe(true);
 });
 
 test("should pause game when reset", async () => {

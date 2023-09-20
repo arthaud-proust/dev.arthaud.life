@@ -4,12 +4,13 @@ import { useGame } from "@/composables/game";
 import { plannerCannon } from "@/utils/matrices";
 import { Squares2X2Icon as Squares2X2IconOutline } from "@heroicons/vue/24/outline";
 import {
-  ArrowPathIcon,
-  ArrowUturnLeftIcon,
-  ClockIcon,
-  PauseIcon,
-  PlayIcon,
-  Squares2X2Icon as Squares2X2IconSolid,
+ArrowPathIcon,
+ArrowUturnLeftIcon,
+ArrowUturnRightIcon,
+ClockIcon,
+PauseIcon,
+PlayIcon,
+Squares2X2Icon as Squares2X2IconSolid,
 } from "@heroicons/vue/24/solid";
 import { ref, watch } from "vue";
 
@@ -117,6 +118,16 @@ game.value.init(plannerCannon).setFrameInterval(speeds[0]);
         :disabled="!game.canUndo"
       >
         <ArrowUturnLeftIcon class="h-4" />
+      </button>
+
+      <button
+        class="button-icon"
+        :class="{ 'text-gray-400': !game.canRedo }"
+        @click="game.redo"
+        aria-label="Undo"
+        :disabled="!game.canRedo"
+      >
+        <ArrowUturnRightIcon class="h-4" />
       </button>
     </template>
   </section>

@@ -10,6 +10,7 @@ import { cloneMatrix } from "@/utils/matrices";
 export class Game {
   _baseMatrix: Matrix;
   _matrixHistory: Array<Matrix> = [];
+  _matrixUndoHistory: Array<Matrix> = [];
   matrix: Matrix;
   frameMsInterval: number;
   isPlaying: boolean;
@@ -19,6 +20,7 @@ export class Game {
   constructor() {
     this._baseMatrix = [];
     this._matrixHistory = [];
+    this._matrixUndoHistory = [];
     this.matrix = [];
     this.frameMsInterval = 100;
     this.isPlaying = false;
@@ -94,6 +96,8 @@ export class Game {
   }
 
   undo(): this {
+    this._saveMatrixToUndoHistory();
+    
     const previousMatrix = this._matrixHistory.pop();
 
     if (previousMatrix) {
@@ -103,8 +107,22 @@ export class Game {
     return this;
   }
 
+  redo(): this {
+    const previousMatrix = this._matrixUndoHistory.pop();
+    this._saveMatrixToHistory();
+    if (previousMatrix) {
+      this.matrix = previousMatrix;
+    }
+
+    return this;
+  }
+
   get canUndo(): boolean {
     return !!this._matrixHistory.length;
+  }
+
+  get canRedo(): boolean {
+    return !!this._matrixUndoHistory.length;
   }
 
   killAllCells(): this {
@@ -131,6 +149,12 @@ export class Game {
 
   _saveMatrixToHistory(): this {
     this._matrixHistory.push(cloneMatrix(this.matrix));
+
+    return this;
+  }
+
+  _saveMatrixToUndoHistory(): this {
+    this._matrixUndoHistory.push(cloneMatrix(this.matrix));
 
     return this;
   }
