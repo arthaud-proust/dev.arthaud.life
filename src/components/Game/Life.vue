@@ -49,6 +49,12 @@ game.value.init(plannerCannon).setFrameInterval(speeds[0]);
           <h1 class="text-xl">Edit cells by clicking on it. Then, play!</h1>
           <p class="text-gray-500">Tip: you can zoom on the grid.</p>
         </div>
+        <div
+          v-if="game.hasEnded"
+          class="h-10 flex flex-col items-center justify-center mb-10 md:mb-14"
+        >
+          <h1 class="text-xl">Game over!</h1>
+        </div>
       </template>
 
       <template #bottom>
@@ -58,6 +64,15 @@ game.value.init(plannerCannon).setFrameInterval(speeds[0]);
         >
           <button @click="game.play()" class="button">
             <span>Start the game</span>
+            <PlayIcon class="h-4" />
+          </button>
+        </div>
+        <div
+          v-if="game.hasEnded"
+          class="h-10 flex items-center justify-center mt-10 md:mt-14"
+        >
+          <button @click="game.reset()" class="button">
+            <span>Restart</span>
             <PlayIcon class="h-4" />
           </button>
         </div>

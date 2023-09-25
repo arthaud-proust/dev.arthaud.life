@@ -167,7 +167,7 @@ test("should be able to undo if matrix history", async () => {
   expect(game.canUndo).toBe(true);
 });
 
-test("should pause game when reset", async () => {
+test("reset should set state same as when game init", async () => {
   const game = new Game();
   const startMatrix: Matrix = [
     [ALIVE, ALIVE],
@@ -177,6 +177,7 @@ test("should pause game when reset", async () => {
   game.init(startMatrix).playWithoutTicking();
 
   game.tick;
+  game.end();
 
   game.reset();
 

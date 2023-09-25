@@ -93,11 +93,19 @@ export class Game {
     return this;
   }
 
+  end(): this {
+    this.pause();
+    this.hasEnded = true;
+
+    return this;
+  }
+
   reset(): this {
     this.matrix = this._baseMatrix;
 
     this.pause();
     this.hasStarted = false;
+    this.hasEnded = false;
 
     return this;
   }
@@ -167,8 +175,7 @@ export class Game {
 
   _checkEnd(): this {
     if (this._isEnded()) {
-      this.pause();
-      this.hasEnded = true;
+      this.end();
     }
 
     return this;
