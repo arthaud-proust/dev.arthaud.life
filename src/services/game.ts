@@ -5,7 +5,7 @@
 
 import { getNextMatrix } from "@/rules/matrix";
 import { ALIVE, CellCoords, CellState, DEAD, Matrix } from "@/types";
-import { cloneMatrix } from "@/utils/matrices";
+import { cloneMatrix, getAliveCellsCount } from "@/utils/matrices";
 
 export class Game {
   _baseMatrix: Matrix;
@@ -165,12 +165,8 @@ export class Game {
     return this;
   }
 
-  _areCellsAlive(): boolean {
-    return this.matrix.some((row) => row.includes(ALIVE));
-  }
-
   _isEnded(): boolean {
-    return !this._areCellsAlive();
+    return 0 >= getAliveCellsCount(this.matrix);
   }
 
   _checkEnd(): this {

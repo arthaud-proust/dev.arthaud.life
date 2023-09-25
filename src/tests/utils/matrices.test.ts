@@ -1,5 +1,19 @@
 import { ALIVE, DEAD, Matrix } from "@/types";
-import { cloneMatrix } from "@/utils/matrices";
+import { cloneMatrix, getAliveCellsCount } from "@/utils/matrices";
+
+test("return number of alive cells in matrix", () => {
+  expect(getAliveCellsCount([])).toBe(0);
+
+  expect(getAliveCellsCount([[]])).toBe(0);
+
+  expect(
+    getAliveCellsCount([
+      [ALIVE, DEAD, ALIVE],
+      [DEAD, DEAD, DEAD],
+      [DEAD, ALIVE, DEAD],
+    ]),
+  ).toBe(3);
+});
 
 test("clone matrix without any shallow reference", async () => {
   let matrixA: Matrix = [[ALIVE, DEAD]];

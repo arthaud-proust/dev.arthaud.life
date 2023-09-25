@@ -1,4 +1,18 @@
-import { ALIVE as A, DEAD as D, Matrix } from "@/types";
+import { ALIVE as A, ALIVE, DEAD as D, Matrix } from "@/types";
+
+export function getAliveCellsCount(matrix: Matrix): number {
+  let count = 0;
+
+  matrix.forEach((row) =>
+    row.forEach((cellState) => {
+      if (cellState === ALIVE) {
+        count++;
+      }
+    }),
+  );
+
+  return count;
+}
 
 export function cloneMatrix(matrix: Matrix): Matrix {
   return Array.from(matrix.map((row) => Array.from(row)));
