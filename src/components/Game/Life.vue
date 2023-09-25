@@ -38,7 +38,7 @@ game.value.init(plannerCannon).setFrameInterval(speeds[0]);
     <MatrixGrid
       class="px-4"
       :matrix="game.matrix"
-      :can-edit="!game.isPlaying"
+      :can-edit="!game.hasStarted"
       @toggle-cell-state="(cellCoords) => game.toggleCellState(cellCoords)"
     >
       <template #top>
