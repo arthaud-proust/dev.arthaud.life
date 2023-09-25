@@ -51,16 +51,34 @@ export class Game {
   }
 
   play(): this {
-    this.isPlaying = true;
-    this.hasStarted = true;
+    this.playWithoutTicking();
 
+    this._setAutoTicking();
+
+    return this;
+  }
+
+  _setAutoTicking(): this {
     this._playingInterval = setInterval(() => {
       if (!this.isPlaying) {
         return;
       }
 
-      this._makeTurn();
+      this.tick();
     }, this.frameMsInterval);
+
+    return this;
+  }
+
+  /**
+   * For test purpose only.
+   * Start game without setting a frame interval,
+   * so the game will go one step forward only when you call the tick() method
+   * @returns this
+   */
+  playWithoutTicking(): this {
+    this.isPlaying = true;
+    this.hasStarted = true;
 
     return this;
   }
@@ -125,7 +143,7 @@ export class Game {
     return this;
   }
 
-  _makeTurn(): this {
+  tick(): this {
     this.matrix = getNextMatrix(this.matrix);
 
     this._checkEnd();

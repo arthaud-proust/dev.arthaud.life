@@ -174,11 +174,9 @@ test("should pause game when reset", async () => {
     [DEAD, ALIVE],
   ];
 
-  const frameInterval = 10;
+  game.init(startMatrix).playWithoutTicking();
 
-  game.setFrameInterval(frameInterval).init(startMatrix).play();
-
-  await delay(frameInterval + 1);
+  game.tick;
 
   game.reset();
 
@@ -190,11 +188,21 @@ test("should pause game when reset", async () => {
 
 test("should end when no cell alive", async () => {
   const game = new Game();
-  const startMatrix: Matrix = [[ALIVE, DEAD, ALIVE]];
+  // this matrix will live 1 tick
+  const startMatrix: Matrix = [
+    [ALIVE, DEAD, ALIVE],
+    [DEAD, DEAD, DEAD],
+    [DEAD, ALIVE, DEAD],
+  ];
 
-  const frameInterval = 10;
-  game.setFrameInterval(frameInterval).init(startMatrix).play();
-  await delay(frameInterval + 1);
+  game.init(startMatrix).playWithoutTicking();
+
+  game.tick();
+
+  expect(game.isPlaying).toBe(true);
+  expect(game.hasEnded).toBe(false);
+
+  game.tick();
 
   expect(game.isPlaying).toBe(false);
   expect(game.hasEnded).toBe(true);
