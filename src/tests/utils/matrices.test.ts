@@ -1,5 +1,5 @@
 import { ALIVE, DEAD, Matrix } from "@/types";
-import { cloneMatrix } from "@/utils/matrices";
+import { base64ToMatrix, cloneMatrix, matrixToBase64 } from "@/utils/matrices";
 
 test("clone matrix without any shallow reference", async () => {
   let matrixA: Matrix = [[ALIVE, DEAD]];
@@ -17,4 +17,30 @@ test("clone matrix without any shallow reference", async () => {
   expect(matrixA).not.toStrictEqual(cloneA);
   expect(matrixB).not.toStrictEqual(cloneB);
   expect(matrixC).not.toStrictEqual(cloneC);
+});
+
+test("can convert matrix to base64 string", () => {
+  const matrix: Matrix = [
+    [ALIVE, DEAD, ALIVE],
+    [ALIVE, ALIVE, ALIVE],
+    [ALIVE, DEAD, DEAD],
+  ];
+
+  const string = matrixToBase64(matrix);
+
+  expect(string).not.toBeNull();
+  expect(string).toBe("My4xMDExMTExMDA=");
+});
+
+test("can retrieve matrix from base64 string", () => {
+  const matrix: Matrix = [
+    [ALIVE, DEAD, ALIVE],
+    [ALIVE, ALIVE, ALIVE],
+    [ALIVE, DEAD, DEAD],
+  ];
+  const string = matrixToBase64(matrix);
+
+  const retrievedMatrix = base64ToMatrix(string);
+
+  expect(retrievedMatrix).toStrictEqual(matrix);
 });
