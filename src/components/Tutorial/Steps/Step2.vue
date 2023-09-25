@@ -17,7 +17,7 @@ game.value.init(exampleRule1);
 
 const exampleShown = ref(false);
 function showExample() {
-  game.value._makeTurn();
+  game.value.tick();
   exampleShown.value = true;
 }
 </script>
