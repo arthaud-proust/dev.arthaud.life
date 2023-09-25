@@ -14,6 +14,7 @@ export class Game {
   frameMsInterval: number;
   isPlaying: boolean;
   hasStarted: boolean;
+  hasEnded: boolean;
   _playingInterval: null | ReturnType<typeof setInterval>;
 
   constructor() {
@@ -23,6 +24,7 @@ export class Game {
     this.frameMsInterval = 100;
     this.isPlaying = false;
     this.hasStarted = false;
+    this.hasEnded = false;
     this._playingInterval = null;
   }
 
@@ -126,11 +128,30 @@ export class Game {
   _makeTurn(): this {
     this.matrix = getNextMatrix(this.matrix);
 
+    this._checkEnd();
+
     return this;
   }
 
   _saveMatrixToHistory(): this {
     this._matrixHistory.push(cloneMatrix(this.matrix));
+
+    return this;
+  }
+
+  _areCellsAlive(): boolean {
+    return this.matrix.some((row) => row.includes(ALIVE));
+  }
+
+  _isEnded(): boolean {
+    return !this._areCellsAlive();
+  }
+
+  _checkEnd(): this {
+    if (this._isEnded()) {
+      this.pause();
+      this.hasEnded = true;
+    }
 
     return this;
   }

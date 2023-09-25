@@ -12,6 +12,15 @@ test("should be paused when initiating game", () => {
   expect(game.isPlaying).toBe(false);
 });
 
+test("should set hasEnded to false when initiating game", () => {
+  const game = new Game();
+
+  const startMatrix: Matrix = [[ALIVE, DEAD]];
+  game.init(startMatrix);
+
+  expect(game.hasEnded).toBe(false);
+});
+
 test("should set hasStarted to true when playing", () => {
   const game = new Game();
 
@@ -161,7 +170,7 @@ test("should be able to undo if matrix history", async () => {
 test("should pause game when reset", async () => {
   const game = new Game();
   const startMatrix: Matrix = [
-    [ALIVE, DEAD],
+    [ALIVE, ALIVE],
     [DEAD, ALIVE],
   ];
 
@@ -176,4 +185,17 @@ test("should pause game when reset", async () => {
   expect(game.matrix).toStrictEqual(startMatrix);
   expect(game.isPlaying).toBe(false);
   expect(game.hasStarted).toBe(false);
+  expect(game.hasEnded).toBe(false);
+});
+
+test("should end when no cell alive", async () => {
+  const game = new Game();
+  const startMatrix: Matrix = [[ALIVE, DEAD, ALIVE]];
+
+  const frameInterval = 10;
+  game.setFrameInterval(frameInterval).init(startMatrix).play();
+  await delay(frameInterval + 1);
+
+  expect(game.isPlaying).toBe(false);
+  expect(game.hasEnded).toBe(true);
 });
