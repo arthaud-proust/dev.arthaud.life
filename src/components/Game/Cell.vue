@@ -10,11 +10,15 @@ defineProps<{
 
 const emit = defineEmits<{
   toggleState: [];
+  startToggle: [];
+  dragToggle: [];
+  endToggle: [];
 }>();
 </script>
 
 <template>
   <div
+    @mouseup="emit('endToggle')"
     class="relative aspect-square w-full"
     :class="{
       'bg-white': state === DEAD,
@@ -25,11 +29,18 @@ const emit = defineEmits<{
     <button
       v-if="canEdit"
       :aria-label="state === DEAD ? 'Add cell' : 'Remove cell'"
-      @click="emit('toggleState')"
+      @mousedown="emit('startToggle')"
+      @mouseenter="emit('dragToggle')"
       class="absolute top-0 left-0 h-full w-full flex items-center justify-center hover:bg-gray-300/30"
     >
-      <PlusCircleIcon v-if="state === DEAD" class="h-1/3 text-gray-400/40" />
-      <MinusCircleIcon v-else class="h-1/3 text-gray-300/40" />
+      <PlusCircleIcon
+        v-if="state === DEAD"
+        class="pointer-events-none h-1/3 text-gray-400/40"
+      />
+      <MinusCircleIcon
+        v-else
+        class="pointer-events-none h-1/3 text-gray-300/40"
+      />
     </button>
   </div>
 </template>
