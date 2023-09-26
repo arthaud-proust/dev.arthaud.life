@@ -49,7 +49,7 @@ game.value.init(level1).setFrameInterval(speeds[0]);
       class="max-w-[65vh]"
       show-grid
       :matrix="game.matrix"
-      :can-edit="!game.hasStarted"
+      :can-edit="!game.isPlaying && !game.hasEnded"
       :can-add-cell="game.canAddCell"
       @toggle-cell-state="(cellCoords) => game.toggleCellState(cellCoords)"
     />
@@ -70,56 +70,67 @@ game.value.init(level1).setFrameInterval(speeds[0]);
     </article>
   </section>
 
-  <section class="absolute z-50 h-16 left-0 top-0 flex p-2 items-center">
-    <button
-      class="button-icon"
-      @click="game.isPlaying ? game.pause() : game.play()"
-      :aria-label="game.isPlaying ? 'Pause game' : 'Play game'"
-    >
-      <PauseIcon v-if="game.isPlaying" class="h-4" />
-      <PlayIcon v-else class="h-4" />
-    </button>
-
-    <template v-if="game.hasStarted">
+  <section
+    class="absolute z-50 h-16 w-screen left-0 top-0 flex p-2 items-center"
+  >
+    <div v-if="!game.hasEnded" class="flex items-center">
       <button
         class="button-icon"
-        @click="setNextSpeed()"
-        :aria-label="
-          speedIndex + 1 === speeds.length ? 'Reset speed' : 'Increase speed'
-        "
+        @click="game.isPlaying ? game.pause() : game.play()"
+        :aria-label="game.isPlaying ? 'Pause game' : 'Play game'"
       >
-        <ClockIcon class="h-4" />
-        <span class="text-xs">x{{ speedIndex + 1 }}</span>
+        <PauseIcon v-if="game.isPlaying" class="h-4" />
+        <PlayIcon v-else class="h-4" />
       </button>
 
-      <button class="button-icon" @click="game.reset()" aria-label="Reset game">
-        <ArrowPathIcon class="h-4" />
-      </button>
-    </template>
+      <template v-if="game.isPlaying">
+        <button
+          class="button-icon"
+          @click="setNextSpeed()"
+          :aria-label="
+            speedIndex + 1 === speeds.length ? 'Reset speed' : 'Increase speed'
+          "
+        >
+          <ClockIcon class="h-4" />
+          <span class="text-xs">x{{ speedIndex + 1 }}</span>
+        </button>
 
-    <template v-else>
-      <button
-        class="button-icon"
-        @click="game.removeAllCells"
-        aria-label="Remove all cells"
-      >
-        <Squares2X2IconOutline class="h-4" />
-      </button>
+        <button
+          class="button-icon"
+          @click="game.reset()"
+          aria-label="Reset game"
+        >
+          <ArrowPathIcon class="h-4" />
+        </button>
+      </template>
 
-      <button
-        class="button-icon"
-        :class="{ 'text-gray-400': !game.canUndo }"
-        @click="game.undo"
-        aria-label="Undo"
-        :disabled="!game.canUndo"
-      >
-        <ArrowUturnLeftIcon class="h-4" />
-      </button>
+      <template v-else>
+        <button
+          class="button-icon"
+          @click="game.removeAllCells"
+          aria-label="Remove all cells"
+        >
+          <Squares2X2IconOutline class="h-4" />
+        </button>
 
+        <button
+          class="button-icon"
+          :class="{ 'text-gray-400': !game.canUndo }"
+          @click="game.undo"
+          aria-label="Undo"
+          :disabled="!game.canUndo"
+        >
+          <ArrowUturnLeftIcon class="h-4" />
+        </button>
+      </template>
+    </div>
+
+    <div class="flex items-center ml-auto">
       <span class="button-icon">
-        <StopIcon class="h-6" />
+        <StopIcon class="h-4" />
         <span>{{ game.cellsStock }}</span>
       </span>
-    </template>
+
+    </div>
   </section>
 </template>
