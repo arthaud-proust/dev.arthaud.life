@@ -11,12 +11,44 @@ defineProps<{
 }>();
 
 const emit = defineEmits<{
-  toggleCellState: [cellCoords: CellCoords];
+  toggleCellState: [cellCoords: CellCoords | Array<CellCoords>];
 }>();
+
+let isToggling = false;
+let toggleList: Set<CellCoords> = new Set();
+
+function startToggle(coords: CellCoords) {
+  if (isToggling) {
+    return;
+  }
+
+  toggleList = new Set();
+  isToggling = true;
+
+  addToggle(coords);
+}
+
+function addToggle(coords: CellCoords) {
+  if (!isToggling) {
+    return;
+  }
+
+  emit("toggleCellState", coords);
+
+  toggleList.add(coords);
+}
+
+function endToggle() {
+  if (!isToggling) {
+    return;
+  }
+
+  isToggling = false;
+}
 </script>
 
 <template>
-  <article class="aspect-square w-full">
+  <article class="aspect-square w-full" @mouseleave="endToggle">
     <div
       class="flex flex-col justify-center w-full"
       :class="[showGrid ? 'bg-black gap-px' : '', ,]"
@@ -37,6 +69,9 @@ const emit = defineEmits<{
           :state="cellState"
           :transition="cellsTransition"
           @toggle-state="() => emit('toggleCellState', [x, y])"
+          @start-toggle="() => startToggle([x, y])"
+          @drag-toggle="() => addToggle([x, y])"
+          @end-toggle="endToggle"
         />
       </div>
     </div>
