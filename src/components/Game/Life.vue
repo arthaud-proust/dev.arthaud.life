@@ -78,6 +78,7 @@ game.value.init(level1).setFrameInterval(speeds[0]);
       <button
         class="button-icon"
         @click="game.isPlaying ? game.pause() : game.play()"
+        v-tooltip="game.isPlaying ? 'Pause game' : 'Play game'"
         :aria-label="game.isPlaying ? 'Pause game' : 'Play game'"
       >
         <PauseIcon v-if="game.isPlaying" class="h-4" />
@@ -88,6 +89,9 @@ game.value.init(level1).setFrameInterval(speeds[0]);
         <button
           class="button-icon"
           @click="setNextSpeed()"
+          v-tooltip="
+            speedIndex + 1 === speeds.length ? 'Reset speed' : 'Increase speed'
+          "
           :aria-label="
             speedIndex + 1 === speeds.length ? 'Reset speed' : 'Increase speed'
           "
@@ -99,6 +103,7 @@ game.value.init(level1).setFrameInterval(speeds[0]);
         <button
           class="button-icon"
           @click="game.reset()"
+          v-tooltip="'Reset game'"
           aria-label="Reset game"
         >
           <ArrowPathIcon class="h-4" />
@@ -109,6 +114,7 @@ game.value.init(level1).setFrameInterval(speeds[0]);
         <button
           class="button-icon"
           @click="game.removeAllCells"
+          v-tooltip="'Remove all cells'"
           aria-label="Remove all cells"
         >
           <Squares2X2IconOutline class="h-4" />
@@ -118,6 +124,7 @@ game.value.init(level1).setFrameInterval(speeds[0]);
           class="button-icon"
           :class="{ 'text-gray-400': !game.canUndo }"
           @click="game.undo"
+          v-tooltip="'Undo'"
           aria-label="Undo"
           :disabled="!game.canUndo"
         >
@@ -127,18 +134,19 @@ game.value.init(level1).setFrameInterval(speeds[0]);
     </div>
 
     <div class="flex items-center ml-auto">
-      <span
+      <button
+        v-tooltip="game.cellsStock + ' cells in stock'"
         class="button-icon h-8 rounded"
         :class="{ 'text-red-800 bg-red-100': game.cellsStock <= 0 }"
       >
         <StopIcon class="h-4" />
-        <span>{{ game.cellsStock }}</span>
-      </span>
+        <span class="text-xs">{{ game.cellsStock }}</span>
+      </button>
 
-      <span class="button-icon">
+      <button class="button-icon" v-tooltip="game.turnsCount + ' turns past'">
         <CalendarDaysIcon class="h-4" />
-        <span class="w-10">{{ game.turnsCount }}</span>
-      </span>
+        <span class="text-xs w-10">{{ game.turnsCount }}</span>
+      </button>
     </div>
   </section>
 </template>
