@@ -1,5 +1,63 @@
 import { ALIVE, DEAD, Matrix } from "@/types";
-import { cloneMatrix } from "@/utils/matrices";
+import {
+  cloneMatrix,
+  getAliveCellsCount,
+  getDiffAliveCellsCount,
+} from "@/utils/matrices";
+
+test("return number of alive cells in matrix", () => {
+  expect(getAliveCellsCount([])).toBe(0);
+
+  expect(getAliveCellsCount([[]])).toBe(0);
+
+  expect(
+    getAliveCellsCount([
+      [ALIVE, DEAD, ALIVE],
+      [DEAD, DEAD, DEAD],
+      [DEAD, ALIVE, DEAD],
+    ]),
+  ).toBe(3);
+});
+
+describe("getDiffAliveCellsCount", () => {
+  test("return positive number if second matrix has more alive cells than the first", () => {
+    const firstMatrix: Matrix = [
+      [DEAD, DEAD],
+      [DEAD, ALIVE],
+    ];
+    const secondMatrix: Matrix = [
+      [ALIVE, ALIVE],
+      [ALIVE, ALIVE],
+    ];
+
+    const diff = getDiffAliveCellsCount(firstMatrix, secondMatrix);
+    expect(diff).toBe(3);
+  });
+
+  test("return negative number if second matrix has less alive cells than the first", () => {
+    const firstMatrix: Matrix = [
+      [ALIVE, ALIVE],
+      [ALIVE, ALIVE],
+    ];
+    const secondMatrix: Matrix = [
+      [DEAD, DEAD],
+      [DEAD, ALIVE],
+    ];
+
+    const diff = getDiffAliveCellsCount(firstMatrix, secondMatrix);
+    expect(diff).toBe(-3);
+  });
+
+  test("return 0 if both matrices has same alive cells count", () => {
+    const sameMatrix: Matrix = [
+      [ALIVE, ALIVE],
+      [ALIVE, ALIVE],
+    ];
+
+    const diff = getDiffAliveCellsCount(sameMatrix, sameMatrix);
+    expect(diff).toBe(0);
+  });
+});
 
 test("clone matrix without any shallow reference", async () => {
   let matrixA: Matrix = [[ALIVE, DEAD]];

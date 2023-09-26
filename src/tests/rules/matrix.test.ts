@@ -3,6 +3,18 @@ import { ALIVE, DEAD, Matrix } from "@/types";
 import { getExtendedMatrix, getNextMatrix } from "@/rules/matrix";
 
 describe("getExtendedMatrix", () => {
+  test("should handle empty matrix", () => {
+    const matrix: Matrix = [];
+
+    expect(getExtendedMatrix(matrix)).toStrictEqual([]);
+  });
+
+  test("should handle matrix with empty row", () => {
+    const matrix: Matrix = [[]];
+
+    expect(getExtendedMatrix(matrix)).toStrictEqual([[]]);
+  });
+
   test("should extend on all sides", () => {
     const matrix: Matrix = [
       [ALIVE, DEAD, DEAD],

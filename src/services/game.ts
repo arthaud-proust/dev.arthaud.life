@@ -5,9 +5,17 @@
 
 import { getNextMatrix } from "@/rules/matrix";
 import { ALIVE, CellCoords, CellState, DEAD, Matrix } from "@/types";
-import { cloneMatrix } from "@/utils/matrices";
+import {
+  cloneMatrix,
+  getAliveCellsCount,
+  getDiffAliveCellsCount,
+} from "@/utils/matrices";
+
+export const CELLS_COUNT_START = 3;
 
 export class Game {
+  _baseCellsStock: number;
+  _cellsStock: number;
   _baseMatrix: Matrix;
   _matrixHistory: Array<Matrix> = [];
   matrix: Matrix;
@@ -18,6 +26,8 @@ export class Game {
   _playingInterval: null | ReturnType<typeof setInterval>;
 
   constructor() {
+    this._baseCellsStock = CELLS_COUNT_START;
+    this._cellsStock = CELLS_COUNT_START;
     this._baseMatrix = [];
     this._matrixHistory = [];
     this.matrix = [];
@@ -28,11 +38,11 @@ export class Game {
     this._playingInterval = null;
   }
 
-  init(matrix: Matrix): this {
+  init(matrix: Matrix, cellsStock: number = CELLS_COUNT_START): this {
     this._baseMatrix = cloneMatrix(matrix);
-    this.matrix = cloneMatrix(matrix);
+    this._baseCellsStock = cellsStock;
 
-    this.pause();
+    this.reset();
 
     return this;
   }
@@ -102,6 +112,7 @@ export class Game {
 
   reset(): this {
     this.matrix = this._baseMatrix;
+    this._cellsStock = this._baseCellsStock;
 
     this.pause();
     this.hasStarted = false;
@@ -115,8 +126,13 @@ export class Game {
 
     const cellState: CellState = this.matrix[cellCoords[1]][cellCoords[0]];
 
-    this.matrix[cellCoords[1]][cellCoords[0]] =
-      cellState === ALIVE ? DEAD : ALIVE;
+    if (cellState === ALIVE) {
+      this._cellsStock++;
+      this.matrix[cellCoords[1]][cellCoords[0]] = DEAD;
+    } else if (cellState === DEAD && this.canAddCell) {
+      this._cellsStock--;
+      this.matrix[cellCoords[1]][cellCoords[0]] = ALIVE;
+    }
 
     return this;
   }
@@ -124,9 +140,14 @@ export class Game {
   undo(): this {
     const previousMatrix = this._matrixHistory.pop();
 
-    if (previousMatrix) {
-      this.matrix = previousMatrix;
+    if (!previousMatrix) {
+      return this;
     }
+
+    const cellsStockDiff = getDiffAliveCellsCount(previousMatrix, this.matrix);
+
+    this._cellsStock += cellsStockDiff;
+    this.matrix = previousMatrix;
 
     return this;
   }
@@ -135,18 +156,36 @@ export class Game {
     return !!this._matrixHistory.length;
   }
 
-  killAllCells(): this {
+  get cellsStock(): number {
+    return this._cellsStock;
+  }
+
+  get canAddCell(): boolean {
+    return this.cellsStock > 0;
+  }
+
+  get previousMatrix(): Matrix | null {
+    if (!this._matrixHistory.length) {
+      return null;
+    }
+
+    return this._matrixHistory[this._matrixHistory.length - 1];
+  }
+
+  get cellsStockDiffFromPreviousMatrix(): number {
+    if (!this.previousMatrix) {
+      return 0;
+    }
+
+    return getDiffAliveCellsCount(this.previousMatrix, this.matrix);
+  }
+
+  removeAllCells(): this {
     this._saveMatrixToHistory();
 
     this.matrix = this.matrix.map((row) => row.map((_cell) => DEAD));
 
-    return this;
-  }
-
-  bornAllCells(): this {
-    this._saveMatrixToHistory();
-
-    this.matrix = this.matrix.map((row) => row.map((_cell) => ALIVE));
+    this._cellsStock -= this.cellsStockDiffFromPreviousMatrix;
 
     return this;
   }
@@ -159,18 +198,16 @@ export class Game {
     return this;
   }
 
-  _saveMatrixToHistory(): this {
-    this._matrixHistory.push(cloneMatrix(this.matrix));
+  _saveMatrixToHistory(): Matrix {
+    const previousMatrix = cloneMatrix(this.matrix);
 
-    return this;
-  }
+    this._matrixHistory.push(previousMatrix);
 
-  _areCellsAlive(): boolean {
-    return this.matrix.some((row) => row.includes(ALIVE));
+    return previousMatrix;
   }
 
   _isEnded(): boolean {
-    return !this._areCellsAlive();
+    return 0 >= getAliveCellsCount(this.matrix);
   }
 
   _checkEnd(): this {

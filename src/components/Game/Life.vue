@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import MatrixGrid from "@/components/Game/MatrixGrid.vue";
 import { useGame } from "@/composables/game";
-import { plannerCannon } from "@/utils/matrices";
+import { level1 } from "@/utils/matrices";
 import { Squares2X2Icon as Squares2X2IconOutline } from "@heroicons/vue/24/outline";
 import {
   ArrowPathIcon,
@@ -9,7 +9,7 @@ import {
   ClockIcon,
   PauseIcon,
   PlayIcon,
-  Squares2X2Icon as Squares2X2IconSolid,
+  StopIcon,
 } from "@heroicons/vue/24/solid";
 import { ref, watch } from "vue";
 
@@ -27,60 +27,50 @@ function setNextSpeed() {
     speedIndex.value + 1 === speeds.length ? 0 : speedIndex.value + 1;
 }
 
-game.value.init(plannerCannon).setFrameInterval(speeds[0]);
+game.value.init(level1).setFrameInterval(speeds[0]);
 </script>
 
 <template>
-  <article
+  <section
     ref="container"
-    class="h-screen w-screen flex justify-center overflow-hidden"
+    class="h-screen w-screen flex flex-col justify-center items-center px-4 py-20 gap-4 md:gap-6 overflow-hidden"
   >
+    <article class="h-12 flex flex-col items-center justify-center text-center">
+      <template v-if="!game.hasStarted">
+        <h1 class="text-xl">Edit cells by clicking on it. Then, play!</h1>
+        <p class="text-gray-500">Tip: you can zoom on the grid.</p>
+      </template>
+      <template v-if="game.hasEnded">
+        <h1 class="text-xl">Game over!</h1>
+      </template>
+    </article>
+
     <MatrixGrid
-      class="px-4"
+      class="max-w-[65vh]"
+      show-grid
       :matrix="game.matrix"
       :can-edit="!game.hasStarted"
+      :can-add-cell="game.canAddCell"
       @toggle-cell-state="(cellCoords) => game.toggleCellState(cellCoords)"
-    >
-      <template #top>
-        <div
-          v-if="!game.hasStarted"
-          class="h-10 flex flex-col items-center justify-center mb-10 md:mb-14"
-        >
-          <h1 class="text-xl">Edit cells by clicking on it. Then, play!</h1>
-          <p class="text-gray-500">Tip: you can zoom on the grid.</p>
-        </div>
-        <div
-          v-if="game.hasEnded"
-          class="h-10 flex flex-col items-center justify-center mb-10 md:mb-14"
-        >
-          <h1 class="text-xl">Game over!</h1>
-        </div>
-      </template>
+    />
 
-      <template #bottom>
-        <div
-          v-if="!game.hasStarted"
-          class="h-10 flex items-center justify-center mt-10 md:mt-14"
-        >
-          <button @click="game.play()" class="button">
-            <span>Start the game</span>
-            <PlayIcon class="h-4" />
-          </button>
-        </div>
-        <div
-          v-if="game.hasEnded"
-          class="h-10 flex items-center justify-center mt-10 md:mt-14"
-        >
-          <button @click="game.reset()" class="button">
-            <span>Restart</span>
-            <PlayIcon class="h-4" />
-          </button>
-        </div>
+    <article class="h-12 flex items-center justify-center text-center">
+      <template v-if="!game.hasStarted">
+        <button @click="game.play()" class="button">
+          <span>Start the game</span>
+          <PlayIcon class="h-4" />
+        </button>
       </template>
-    </MatrixGrid>
-  </article>
+      <template v-if="game.hasEnded">
+        <button @click="game.reset()" class="button">
+          <span>Restart</span>
+          <PlayIcon class="h-4" />
+        </button>
+      </template>
+    </article>
+  </section>
 
-  <section class="absolute z-50 left-0 top-0 flex p-2 items-center">
+  <section class="absolute z-50 h-16 left-0 top-0 flex p-2 items-center">
     <button
       class="button-icon"
       @click="game.isPlaying ? game.pause() : game.play()"
@@ -110,18 +100,10 @@ game.value.init(plannerCannon).setFrameInterval(speeds[0]);
     <template v-else>
       <button
         class="button-icon"
-        @click="game.killAllCells"
-        aria-label="Kill all cells"
+        @click="game.removeAllCells"
+        aria-label="Remove all cells"
       >
         <Squares2X2IconOutline class="h-4" />
-      </button>
-
-      <button
-        class="button-icon"
-        @click="game.bornAllCells"
-        aria-label="Born all cells"
-      >
-        <Squares2X2IconSolid class="h-4" />
       </button>
 
       <button
@@ -133,6 +115,11 @@ game.value.init(plannerCannon).setFrameInterval(speeds[0]);
       >
         <ArrowUturnLeftIcon class="h-4" />
       </button>
+
+      <span class="button-icon">
+        <StopIcon class="h-6" />
+        <span>{{ game.cellsStock }}</span>
+      </span>
     </template>
   </section>
 </template>

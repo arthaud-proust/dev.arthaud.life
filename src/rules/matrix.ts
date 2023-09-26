@@ -18,6 +18,10 @@ export function getNextMatrix(matrix: Matrix): Matrix {
 export function getExtendedMatrix(matrix: Matrix): Matrix {
   // extend a matrix side if a border contains at least one alive ceil
 
+  if (!matrix.length) {
+    return matrix;
+  }
+
   // top side
   const FIRST_ROW = 0;
   if (matrix[FIRST_ROW].some((ceilState) => ceilState === ALIVE)) {

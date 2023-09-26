@@ -1,4 +1,25 @@
-import { ALIVE as A, DEAD as D, Matrix } from "@/types";
+import { ALIVE as A, ALIVE, DEAD as D, Matrix } from "@/types";
+
+export function getAliveCellsCount(matrix: Matrix): number {
+  let count = 0;
+
+  matrix.forEach((row) =>
+    row.forEach((cellState) => {
+      if (cellState === ALIVE) {
+        count++;
+      }
+    }),
+  );
+
+  return count;
+}
+
+export function getDiffAliveCellsCount(a: Matrix, b: Matrix): number {
+  const aCount = getAliveCellsCount(a);
+  const bCount = getAliveCellsCount(b);
+
+  return bCount - aCount;
+}
 
 export function cloneMatrix(matrix: Matrix): Matrix {
   return Array.from(matrix.map((row) => Array.from(row)));
@@ -55,4 +76,12 @@ export const turnSignal: Matrix = [
   [D, D, D],
   [A, A, A],
   [D, D, D],
+];
+
+export const level1: Matrix = [
+  [D, D, D, D, D],
+  [D, D, D, D, D],
+  [D, D, D, D, D],
+  [D, D, D, D, D],
+  [D, D, D, D, D],
 ];
