@@ -77,3 +77,11 @@ export const turnSignal: Matrix = [
   [A, A, A],
   [D, D, D],
 ];
+
+export const level1: Matrix = [
+  [D, D, D, D, D],
+  [D, D, D, D, D],
+  [D, D, D, D, D],
+  [D, D, D, D, D],
+  [D, D, D, D, D],
+];

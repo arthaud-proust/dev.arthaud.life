@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import Cell from "@/components/Game/Cell.vue";
 import { CellCoords, Matrix } from "@/types";
-import { useElementSize } from "@vueuse/core";
-import { ref } from "vue";
 
 defineProps<{
   matrix: Matrix;
@@ -11,28 +9,16 @@ defineProps<{
   cellsTransition?: boolean;
 }>();
 
-const container = ref();
-const containerSize = useElementSize(container);
-
 const emit = defineEmits<{
   toggleCellState: [cellCoords: CellCoords];
 }>();
 </script>
 
 <template>
-  <div
-    class="aspect-square flex flex-col justify-center"
-    :class="
-      containerSize.height.value < containerSize.width.value
-        ? 'h-full'
-        : 'w-full'
-    "
-  >
-    <slot name="top"></slot>
-
+  <article class="aspect-square w-full">
     <div
-      class="flex flex-col justify-center"
-      :class="{ 'bg-black gap-px': showGrid }"
+      class="flex flex-col justify-center w-full"
+      :class="[showGrid ? 'bg-black gap-px' : '', ,]"
     >
       <div
         class="flex"
@@ -50,8 +36,6 @@ const emit = defineEmits<{
         />
       </div>
     </div>
-
-    <slot name="bottom"></slot>
-  </div>
+  </article>
 </template>
 @/types/matrix
