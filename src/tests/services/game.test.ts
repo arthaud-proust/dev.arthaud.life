@@ -119,7 +119,20 @@ describe("canAddCell", () => {
   });
 });
 
-test("can toggle cell state", async () => {
+describe("turnsCount", () => {
+  test("should increment each tick", () => {
+    const game = new Game();
+    const startMatrix: Matrix = [[ALIVE, DEAD]];
+
+    game.init(startMatrix, 0);
+
+    game.tick();
+
+    expect(game.turnsCount).toBe(1);
+  });
+});
+
+test("can remove cell", async () => {
   const game = new Game();
   const startMatrix: Matrix = [[ALIVE, DEAD]];
 
@@ -208,6 +221,7 @@ test("reset should set state same as when game init", async () => {
 
   game.reset();
 
+  expect(game.turnsCount).toBe(0);
   expect(game.matrix).toStrictEqual(startMatrix);
   expect(game.isPlaying).toBe(false);
   expect(game.hasStarted).toBe(false);

@@ -14,6 +14,7 @@ import {
 export const CELLS_COUNT_START = 3;
 
 export class Game {
+  _turnsCount: number;
   _baseCellsStock: number;
   _cellsStock: number;
   _baseMatrix: Matrix;
@@ -26,6 +27,7 @@ export class Game {
   _playingInterval: null | ReturnType<typeof setInterval>;
 
   constructor() {
+    this._turnsCount = 0;
     this._baseCellsStock = CELLS_COUNT_START;
     this._cellsStock = CELLS_COUNT_START;
     this._baseMatrix = [];
@@ -111,6 +113,7 @@ export class Game {
   }
 
   reset(): this {
+    this._turnsCount = 0;
     this.matrix = cloneMatrix(this._baseMatrix);
     this._cellsStock = this._baseCellsStock;
 
@@ -152,6 +155,10 @@ export class Game {
     return this;
   }
 
+  get turnsCount(): number {
+    return this._turnsCount;
+  }
+
   get canUndo(): boolean {
     return !!this._matrixHistory.length;
   }
@@ -191,6 +198,8 @@ export class Game {
   }
 
   tick(): this {
+    this._turnsCount++;
+
     this.matrix = getNextMatrix(this.matrix);
 
     this._checkEnd();

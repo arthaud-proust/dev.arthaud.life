@@ -6,6 +6,7 @@ import { Squares2X2Icon as Squares2X2IconOutline } from "@heroicons/vue/24/outli
 import {
   ArrowPathIcon,
   ArrowUturnLeftIcon,
+  CalendarDaysIcon,
   ClockIcon,
   PauseIcon,
   PlayIcon,
@@ -131,6 +132,10 @@ game.value.init(level1).setFrameInterval(speeds[0]);
         <span>{{ game.cellsStock }}</span>
       </span>
 
+      <span class="button-icon">
+        <CalendarDaysIcon class="h-4" />
+        <span class="w-10">{{ game.turnsCount }}</span>
+      </span>
     </div>
   </section>
 </template>
