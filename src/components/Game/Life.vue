@@ -127,7 +127,10 @@ game.value.init(level1).setFrameInterval(speeds[0]);
     </div>
 
     <div class="flex items-center ml-auto">
-      <span class="button-icon">
+      <span
+        class="button-icon h-8 rounded"
+        :class="{ 'text-red-800 bg-red-100': game.cellsStock <= 0 }"
+      >
         <StopIcon class="h-4" />
         <span>{{ game.cellsStock }}</span>
       </span>
