@@ -111,7 +111,7 @@ export class Game {
   }
 
   reset(): this {
-    this.matrix = this._baseMatrix;
+    this.matrix = cloneMatrix(this._baseMatrix);
     this._cellsStock = this._baseCellsStock;
 
     this.pause();

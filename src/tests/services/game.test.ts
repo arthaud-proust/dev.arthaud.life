@@ -203,7 +203,7 @@ test("reset should set state same as when game init", async () => {
 
   game.init(startMatrix).playWithoutTicking();
 
-  game.tick;
+  game.tick();
   game.end();
 
   game.reset();
