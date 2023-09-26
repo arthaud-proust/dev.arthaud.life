@@ -129,7 +129,7 @@ export class Game {
     if (cellState === ALIVE) {
       this._cellsStock++;
       this.matrix[cellCoords[1]][cellCoords[0]] = DEAD;
-    } else {
+    } else if (cellState === DEAD && this.canAddCell) {
       this._cellsStock--;
       this.matrix[cellCoords[1]][cellCoords[0]] = ALIVE;
     }
@@ -158,6 +158,10 @@ export class Game {
 
   get cellsStock(): number {
     return this._cellsStock;
+  }
+
+  get canAddCell(): boolean {
+    return this.cellsStock > 0;
   }
 
   get previousMatrix(): Matrix | null {

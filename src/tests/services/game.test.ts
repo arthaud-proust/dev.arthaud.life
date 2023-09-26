@@ -99,6 +99,26 @@ test("should change matrix if playing", async () => {
   expect(game.matrix).not.toStrictEqual(startMatrix);
 });
 
+describe("canAddCell", () => {
+  test("should return true if stock > 0", async () => {
+    const game = new Game();
+    const startMatrix: Matrix = [[DEAD, DEAD]];
+
+    game.init(startMatrix, 1);
+
+    expect(game.canAddCell).toBe(true);
+  });
+
+  test("should return false if stock <= 0", async () => {
+    const game = new Game();
+    const startMatrix: Matrix = [[DEAD, DEAD]];
+
+    game.init(startMatrix, 0);
+
+    expect(game.canAddCell).toBe(false);
+  });
+});
+
 test("can toggle cell state", async () => {
   const game = new Game();
   const startMatrix: Matrix = [[ALIVE, DEAD]];
@@ -107,6 +127,16 @@ test("can toggle cell state", async () => {
 
   expect(game.matrix).toStrictEqual([[DEAD, DEAD]]);
   expect(game.cellsStock).toBe(1);
+});
+
+test("cannot add cell if no stock", async () => {
+  const game = new Game();
+  const startMatrix: Matrix = [[DEAD, DEAD]];
+
+  game.init(startMatrix, 0).toggleCellState([0, 0]);
+
+  expect(game.matrix).toStrictEqual([[DEAD, DEAD]]);
+  expect(game.cellsStock).toBe(0);
 });
 
 test("can undo toggle cell state", async () => {
