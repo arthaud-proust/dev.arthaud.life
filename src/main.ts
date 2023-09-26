@@ -1,4 +1,10 @@
-import { createApp } from "vue";
 import App from "@/App.vue";
+import FloatingVue from "floating-vue";
+import "floating-vue/dist/style.css";
+import { createApp } from "vue";
 
-createApp(App).mount("#app");
+const app = createApp(App);
+
+app.use(FloatingVue);
+
+app.mount("#app");
