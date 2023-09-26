@@ -1,24 +1,45 @@
-import { Game } from "@/services/game";
+import { CELLS_COUNT_START, Game } from "@/services/game";
 import { ALIVE, DEAD, Matrix } from "@/types";
 import { delay } from "@/utils/delay";
 
-test("should be paused when initiating game", () => {
-  const game = new Game();
+describe("Initiating game", () => {
+  test("should pause game", () => {
+    const game = new Game();
 
-  const startMatrix: Matrix = [[ALIVE, DEAD]];
-  game.init(startMatrix);
+    const startMatrix: Matrix = [[ALIVE, DEAD]];
+    game.init(startMatrix);
 
-  expect(game.matrix).toStrictEqual(startMatrix);
-  expect(game.isPlaying).toBe(false);
-});
+    expect(game.matrix).toStrictEqual(startMatrix);
+    expect(game.isPlaying).toBe(false);
+  });
 
-test("should set hasEnded to false when initiating game", () => {
-  const game = new Game();
+  test("should set hasEnded to false", () => {
+    const game = new Game();
 
-  const startMatrix: Matrix = [[ALIVE, DEAD]];
-  game.init(startMatrix);
+    const startMatrix: Matrix = [[ALIVE, DEAD]];
+    game.init(startMatrix);
 
-  expect(game.hasEnded).toBe(false);
+    expect(game.hasEnded).toBe(false);
+  });
+
+  test("should set cells stock", () => {
+    const game = new Game();
+
+    const startMatrix: Matrix = [[ALIVE, DEAD]];
+    const startStock = Math.round(Math.random() * 1000);
+    game.init(startMatrix, startStock);
+
+    expect(game.cellsStock).toBe(startStock);
+  });
+
+  test("should start with default cells stock if not provided", () => {
+    const game = new Game();
+
+    const startMatrix: Matrix = [[ALIVE, DEAD]];
+    game.init(startMatrix);
+
+    expect(game.cellsStock).toBe(CELLS_COUNT_START);
+  });
 });
 
 test("should set hasStarted to true when playing", () => {
@@ -37,7 +58,7 @@ test("should set hasStarted to true when playing", () => {
 test("should change frame interval and resuming if it was playing", () => {
   const game = new Game();
 
-  const frameInterval = 1093892;
+  const frameInterval = Math.round(Math.random() * 1000);
   game.play().setFrameInterval(frameInterval);
 
   expect(game.isPlaying).toBe(true);
@@ -47,7 +68,7 @@ test("should change frame interval and resuming if it was playing", () => {
 test("should change frame interval without resume if it was paused", () => {
   const game = new Game();
 
-  const frameInterval = 1093892;
+  const frameInterval = Math.round(Math.random() * 1000);
   game.setFrameInterval(frameInterval);
 
   expect(game.isPlaying).toBe(false);
@@ -57,7 +78,7 @@ test("should change frame interval without resume if it was paused", () => {
 test("should not change matrix if paused", async () => {
   const game = new Game();
   const startMatrix: Matrix = [[ALIVE, DEAD]];
-  const frameInterval = 10;
+  const frameInterval = 2;
 
   game.setFrameInterval(frameInterval).init(startMatrix);
 
@@ -69,7 +90,7 @@ test("should not change matrix if paused", async () => {
 test("should change matrix if playing", async () => {
   const game = new Game();
   const startMatrix: Matrix = [[ALIVE, DEAD]];
-  const frameInterval = 10;
+  const frameInterval = 2;
 
   game.setFrameInterval(frameInterval).init(startMatrix).play();
 
@@ -82,78 +103,54 @@ test("can toggle cell state", async () => {
   const game = new Game();
   const startMatrix: Matrix = [[ALIVE, DEAD]];
 
-  game.init(startMatrix).toggleCellState([0, 0]);
+  game.init(startMatrix, 0).toggleCellState([0, 0]);
 
   expect(game.matrix).toStrictEqual([[DEAD, DEAD]]);
+  expect(game.cellsStock).toBe(1);
 });
 
 test("can undo toggle cell state", async () => {
   const game = new Game();
   const startMatrix: Matrix = [[ALIVE, DEAD]];
+  game.init(startMatrix, 0);
 
-  game.init(startMatrix).toggleCellState([0, 0]);
-
+  game.toggleCellState([0, 0]);
   game.undo();
 
   expect(game.matrix).toStrictEqual(startMatrix);
+  expect(game.cellsStock).toBe(0);
 });
 
-test("can kill all cells", async () => {
+test("can remove all cells", async () => {
   const game = new Game();
   const startMatrix: Matrix = [
     [ALIVE, DEAD],
     [DEAD, ALIVE],
   ];
+  game.init(startMatrix, 0);
 
-  game.init(startMatrix).killAllCells();
+  game.removeAllCells();
 
   expect(game.matrix).toStrictEqual([
     [DEAD, DEAD],
     [DEAD, DEAD],
   ]);
+  expect(game.cellsStock).toBe(2);
 });
 
-test("can undo kill all cells", async () => {
+test("can undo remove all cells", async () => {
   const game = new Game();
   const startMatrix: Matrix = [
     [ALIVE, DEAD],
     [DEAD, ALIVE],
   ];
+  game.init(startMatrix, 0);
 
-  game.init(startMatrix).killAllCells();
-
+  game.removeAllCells();
   game.undo();
 
   expect(game.matrix).toStrictEqual(startMatrix);
-});
-
-test("can born all cells", async () => {
-  const game = new Game();
-  const startMatrix: Matrix = [
-    [ALIVE, DEAD],
-    [DEAD, ALIVE],
-  ];
-
-  game.init(startMatrix).bornAllCells();
-
-  expect(game.matrix).toStrictEqual([
-    [ALIVE, ALIVE],
-    [ALIVE, ALIVE],
-  ]);
-});
-
-test("can undo born all cells", async () => {
-  const game = new Game();
-  const startMatrix: Matrix = [
-    [ALIVE, DEAD],
-    [DEAD, ALIVE],
-  ];
-
-  game.init(startMatrix).bornAllCells();
-
-  game.undo();
-
-  expect(game.matrix).toStrictEqual(startMatrix);
+  expect(game.cellsStock).toBe(0);
 });
 
 test("should be able to undo if matrix history", async () => {
@@ -185,6 +182,7 @@ test("reset should set state same as when game init", async () => {
   expect(game.isPlaying).toBe(false);
   expect(game.hasStarted).toBe(false);
   expect(game.hasEnded).toBe(false);
+  expect(game.cellsStock).toBe(CELLS_COUNT_START);
 });
 
 test("should end when no cell alive", async () => {

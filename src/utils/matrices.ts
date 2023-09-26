@@ -14,6 +14,13 @@ export function getAliveCellsCount(matrix: Matrix): number {
   return count;
 }
 
+export function getDiffAliveCellsCount(a: Matrix, b: Matrix): number {
+  const aCount = getAliveCellsCount(a);
+  const bCount = getAliveCellsCount(b);
+
+  return bCount - aCount;
+}
+
 export function cloneMatrix(matrix: Matrix): Matrix {
   return Array.from(matrix.map((row) => Array.from(row)));
 }

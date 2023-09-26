@@ -110,7 +110,7 @@ game.value.init(plannerCannon).setFrameInterval(speeds[0]);
     <template v-else>
       <button
         class="button-icon"
-        @click="game.killAllCells"
+        @click="game.removeAllCells"
         aria-label="Kill all cells"
       >
         <Squares2X2IconOutline class="h-4" />
