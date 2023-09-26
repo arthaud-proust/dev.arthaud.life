@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ALIVE, CellState, DEAD } from "@/types";
+import { MinusCircleIcon, PlusCircleIcon } from "@heroicons/vue/24/outline";
 
 defineProps<{
   state: CellState;
@@ -22,14 +23,14 @@ const emit = defineEmits<{
     }"
   >
     <button
-      v-show="canEdit"
+      v-if="canEdit"
+      :aria-label="state === DEAD ? 'Add cell' : 'Remove cell'"
       @click="emit('toggleState')"
-      class="absolute top-0 left-0 h-full w-full hover:bg-gray-300/30"
-    ></button>
-    <div
-      v-show="canEdit"
-      class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-1/3 pointer-events-none aspect-square rounded-full bg-gray-300/30"
-    ></div>
+      class="absolute top-0 left-0 h-full w-full flex items-center justify-center hover:bg-gray-300/30"
+    >
+      <PlusCircleIcon v-if="state === DEAD" class="h-1/3 text-gray-400/40" />
+      <MinusCircleIcon v-else class="h-1/3 text-gray-300/40" />
+    </button>
   </div>
 </template>
 @/types/matrix

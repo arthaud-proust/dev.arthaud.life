@@ -9,7 +9,7 @@ import {
   ClockIcon,
   PauseIcon,
   PlayIcon,
-  Squares2X2Icon as Squares2X2IconSolid,
+  StopIcon,
 } from "@heroicons/vue/24/solid";
 import { ref, watch } from "vue";
 
@@ -47,8 +47,10 @@ game.value.init(level1).setFrameInterval(speeds[0]);
 
     <MatrixGrid
       class="max-w-[65vh]"
+      show-grid
       :matrix="game.matrix"
       :can-edit="!game.hasStarted"
+      :can-add-cell="game.canAddCell"
       @toggle-cell-state="(cellCoords) => game.toggleCellState(cellCoords)"
     />
 
@@ -99,17 +101,9 @@ game.value.init(level1).setFrameInterval(speeds[0]);
       <button
         class="button-icon"
         @click="game.removeAllCells"
-        aria-label="Kill all cells"
+        aria-label="Remove all cells"
       >
         <Squares2X2IconOutline class="h-4" />
-      </button>
-
-      <button
-        class="button-icon"
-        @click="game.bornAllCells"
-        aria-label="Born all cells"
-      >
-        <Squares2X2IconSolid class="h-4" />
       </button>
 
       <button
@@ -121,6 +115,11 @@ game.value.init(level1).setFrameInterval(speeds[0]);
       >
         <ArrowUturnLeftIcon class="h-4" />
       </button>
+
+      <span class="button-icon">
+        <StopIcon class="h-6" />
+        <span>{{ game.cellsStock }}</span>
+      </span>
     </template>
   </section>
 </template>

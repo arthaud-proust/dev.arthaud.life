@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import Cell from "@/components/Game/Cell.vue";
-import { CellCoords, Matrix } from "@/types";
+import { ALIVE, CellCoords, DEAD, Matrix } from "@/types";
 
 defineProps<{
   matrix: Matrix;
   canEdit?: boolean;
+  canAddCell?: boolean;
   showGrid?: boolean;
   cellsTransition?: boolean;
 }>();
@@ -29,7 +30,10 @@ const emit = defineEmits<{
         <Cell
           v-for="(cellState, x) in row"
           :key="`${x}-${y}`"
-          :can-edit="canEdit"
+          :can-edit="
+            canEdit &&
+            (cellState === ALIVE || (cellState === DEAD && canAddCell))
+          "
           :state="cellState"
           :transition="cellsTransition"
           @toggle-state="() => emit('toggleCellState', [x, y])"

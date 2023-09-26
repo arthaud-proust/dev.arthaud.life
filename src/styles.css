@@ -19,6 +19,6 @@
   }
 
   .button-icon {
-    @apply flex items-center gap-2 p-4 focus:outline-focus;
+    @apply flex items-center gap-1.5 p-4 focus:outline-focus;
   }
 }
