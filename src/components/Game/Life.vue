@@ -12,6 +12,7 @@ import {
   PauseIcon,
   PlayIcon,
   StopIcon,
+  TrophyIcon,
 } from "@heroicons/vue/24/solid";
 import { ref, watch } from "vue";
 
@@ -44,6 +45,7 @@ game.value.init(level1).setFrameInterval(speeds[0]);
       </template>
       <template v-if="game.hasEnded">
         <h1 class="text-xl">Game over!</h1>
+        <p class="text-gray-500">You made a score of {{ game.score.global }}</p>
       </template>
     </article>
 
@@ -134,17 +136,18 @@ game.value.init(level1).setFrameInterval(speeds[0]);
       </template>
     </div>
 
-    <div class="flex items-center ml-auto gap-2">
-      <span
+    <div class="flex items-center ml-auto gap-2 px-2">
+      <p
         v-tooltip="game.cellsStock + ' cells in stock'"
         class="tag-icon"
         :class="{ 'text-red-800 bg-red-100': game.cellsStock <= 0 }"
       >
         <StopIcon class="h-4" />
         <span class="text-xs">{{ game.cellsStock }}</span>
-      </span>
+        <span class="sr-only"> cells in stock</span>
+      </p>
 
-      <span
+      <p
         class="tag-icon"
         v-tooltip="game.turnsCount + ' turns past'"
         :class="{
@@ -153,8 +156,15 @@ game.value.init(level1).setFrameInterval(speeds[0]);
         }"
       >
         <CalendarDaysIcon class="h-4" />
-        <span class="text-xs w-[3ch] text-left">{{ game.turnsCount }}</span>
-      </span>
+        <span class="text-xs">{{ game.turnsCount }}</span>
+        <span class="sr-only"> turns past</span>
+      </p>
+
+      <p v-tooltip="'Score:' + game.cellsStock" class="tag-icon">
+        <TrophyIcon class="h-4" />
+        <span class="sr-only">Score: </span>
+        <span class="text-xs">{{ game.score.global }}</span>
+      </p>
     </div>
   </section>
 </template>

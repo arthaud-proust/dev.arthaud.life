@@ -11,7 +11,7 @@ defineProps<{
 }>();
 
 const emit = defineEmits<{
-  toggleCellState: [cellCoords: CellCoords | Array<CellCoords>];
+  toggleCellState: [cellCoords: CellCoords];
 }>();
 
 let isToggling = false;
