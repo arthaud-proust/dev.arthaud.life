@@ -5,11 +5,14 @@
 
 import { getNextMatrix } from "@/rules/matrix";
 import { ALIVE, CellCoords, CellState, DEAD, Matrix } from "@/types";
+import { Score } from "@/types/score";
 import {
   cloneMatrix,
   getAliveCellsCount,
   getDiffAliveCellsCount,
+  getMatrixSize,
 } from "@/utils/matrices";
+import { getScore } from "@/utils/score";
 
 export const CELLS_COUNT_START = 3;
 export const TURNS_LIMIT = 100;
@@ -188,6 +191,14 @@ export class Game {
     }
 
     return getDiffAliveCellsCount(this.previousMatrix, this.matrix);
+  }
+
+  get score(): Score {
+    return getScore({
+      matrixSize: getMatrixSize(this.matrix),
+      aliveCells: getAliveCellsCount(this.matrix),
+      cellsStock: this.cellsStock,
+    });
   }
 
   removeAllCells(): this {
