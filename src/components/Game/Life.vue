@@ -5,6 +5,7 @@ import { TURNS_LIMIT } from "@/services/game";
 import { level1 } from "@/utils/matrices";
 import { Squares2X2Icon as Squares2X2IconOutline } from "@heroicons/vue/24/outline";
 import {
+  AcademicCapIcon,
   ArrowPathIcon,
   ArrowUturnLeftIcon,
   CalendarDaysIcon,
@@ -15,6 +16,10 @@ import {
   TrophyIcon,
 } from "@heroicons/vue/24/solid";
 import { ref, watch } from "vue";
+
+const emit = defineEmits<{
+  showTutorial: [];
+}>();
 
 const { game } = useGame();
 
@@ -35,14 +40,54 @@ game.value.init(level1).setFrameInterval(speeds[0]);
 
 <template>
   <section
+    class="absolute z-50 h-16 w-screen left-0 top-4 flex p-2 gap-2 items-center justify-between md:justify-evenly"
+  >
+    <button
+      class="button-icon"
+      @click="emit('showTutorial')"
+      v-tooltip="'Tutorial'"
+      aria-label="Tutorial"
+    >
+      <AcademicCapIcon class="h-5" />
+    </button>
+
+    <div class="flex gap-2 items-center">
+      <p
+        v-tooltip="game.cellsStock + ' cells in stock'"
+        class="tag-icon"
+        :class="{ 'text-red-800 bg-red-100': game.cellsStock <= 0 }"
+      >
+        <StopIcon class="h-5" />
+        <span class="text-xs">{{ game.cellsStock }}</span>
+        <span class="sr-only"> cells in stock</span>
+      </p>
+
+      <p
+        class="tag-icon"
+        v-tooltip="game.turnsCount + ' turns past'"
+        :class="{
+          'text-orange-800 bg-orange-100': game.turnsCount >= TURNS_LIMIT * 0.6,
+          'text-red-800 bg-red-100': game.turnsCount >= TURNS_LIMIT * 0.9,
+        }"
+      >
+        <CalendarDaysIcon class="h-5" />
+        <span class="text-xs">{{ game.turnsCount }}</span>
+        <span class="sr-only"> turns past</span>
+      </p>
+
+      <p v-tooltip="'Score:' + game.cellsStock" class="tag-icon">
+        <TrophyIcon class="h-5" />
+        <span class="sr-only">Score: </span>
+        <span class="text-xs">{{ game.score.global }}</span>
+      </p>
+    </div>
+  </section>
+
+  <section
     ref="container"
     class="h-screen w-screen flex flex-col justify-center items-center px-4 py-20 gap-4 md:gap-6 overflow-hidden"
   >
     <article class="h-12 flex flex-col items-center justify-center text-center">
-      <template v-if="!game.hasStarted">
-        <h1 class="text-xl">Edit cells by clicking on it. Then, play!</h1>
-        <p class="text-gray-500">Tip: you can zoom on the grid.</p>
-      </template>
       <template v-if="game.hasEnded">
         <h1 class="text-xl">Game over!</h1>
         <p class="text-gray-500">You made a score of {{ game.score.global }}</p>
@@ -59,112 +104,74 @@ game.value.init(level1).setFrameInterval(speeds[0]);
     />
 
     <article class="h-12 flex items-center justify-center text-center">
-      <template v-if="!game.hasStarted">
-        <button @click="game.play()" class="button">
-          <span>Start the game</span>
-          <PlayIcon class="h-4" />
-        </button>
-      </template>
       <template v-if="game.hasEnded">
         <button @click="game.reset()" class="button">
           <span>Restart</span>
-          <PlayIcon class="h-4" />
+          <PlayIcon class="h-5" />
         </button>
       </template>
     </article>
   </section>
 
   <section
-    class="absolute z-50 h-16 w-screen left-0 top-0 flex p-2 items-center"
+    v-if="!game.hasEnded"
+    class="absolute z-50 h-16 w-screen left-0 bottom-4 flex p-2 items-center justify-center"
   >
-    <div v-if="!game.hasEnded" class="flex items-center">
+    <button
+      class="button-icon"
+      @click="game.isPlaying ? game.pause() : game.play()"
+      v-tooltip="game.isPlaying ? 'Pause game' : 'Play game'"
+      :aria-label="game.isPlaying ? 'Pause game' : 'Play game'"
+    >
+      <PauseIcon v-if="game.isPlaying" class="h-5" />
+      <PlayIcon v-else class="h-5" />
+    </button>
+
+    <template v-if="game.isPlaying">
       <button
         class="button-icon"
-        @click="game.isPlaying ? game.pause() : game.play()"
-        v-tooltip="game.isPlaying ? 'Pause game' : 'Play game'"
-        :aria-label="game.isPlaying ? 'Pause game' : 'Play game'"
+        @click="setNextSpeed()"
+        v-tooltip="
+          speedIndex + 1 === speeds.length ? 'Reset speed' : 'Increase speed'
+        "
+        :aria-label="
+          speedIndex + 1 === speeds.length ? 'Reset speed' : 'Increase speed'
+        "
       >
-        <PauseIcon v-if="game.isPlaying" class="h-4" />
-        <PlayIcon v-else class="h-4" />
+        <ClockIcon class="h-5" />
+        <span class="text-xs">x{{ speedIndex + 1 }}</span>
       </button>
 
-      <template v-if="game.isPlaying">
-        <button
-          class="button-icon"
-          @click="setNextSpeed()"
-          v-tooltip="
-            speedIndex + 1 === speeds.length ? 'Reset speed' : 'Increase speed'
-          "
-          :aria-label="
-            speedIndex + 1 === speeds.length ? 'Reset speed' : 'Increase speed'
-          "
-        >
-          <ClockIcon class="h-4" />
-          <span class="text-xs">x{{ speedIndex + 1 }}</span>
-        </button>
-
-        <button
-          class="button-icon"
-          @click="game.reset()"
-          v-tooltip="'Reset game'"
-          aria-label="Reset game"
-        >
-          <ArrowPathIcon class="h-4" />
-        </button>
-      </template>
-
-      <template v-else>
-        <button
-          class="button-icon"
-          @click="game.removeAllCells"
-          v-tooltip="'Remove all cells'"
-          aria-label="Remove all cells"
-        >
-          <Squares2X2IconOutline class="h-4" />
-        </button>
-
-        <button
-          class="button-icon"
-          :class="{ 'text-gray-400': !game.canUndo }"
-          @click="game.undo"
-          v-tooltip="'Undo'"
-          aria-label="Undo"
-          :disabled="!game.canUndo"
-        >
-          <ArrowUturnLeftIcon class="h-4" />
-        </button>
-      </template>
-    </div>
-
-    <div class="flex items-center ml-auto gap-2 px-2">
-      <p
-        v-tooltip="game.cellsStock + ' cells in stock'"
-        class="tag-icon"
-        :class="{ 'text-red-800 bg-red-100': game.cellsStock <= 0 }"
+      <button
+        class="button-icon"
+        @click="game.reset()"
+        v-tooltip="'Reset game'"
+        aria-label="Reset game"
       >
-        <StopIcon class="h-4" />
-        <span class="text-xs">{{ game.cellsStock }}</span>
-        <span class="sr-only"> cells in stock</span>
-      </p>
+        <ArrowPathIcon class="h-5" />
+      </button>
+    </template>
 
-      <p
-        class="tag-icon"
-        v-tooltip="game.turnsCount + ' turns past'"
-        :class="{
-          'text-orange-800 bg-orange-100': game.turnsCount >= TURNS_LIMIT * 0.6,
-          'text-red-800 bg-red-100': game.turnsCount >= TURNS_LIMIT * 0.9,
-        }"
+    <template v-else>
+      <button
+        class="button-icon"
+        @click="game.removeAllCells"
+        v-tooltip="'Remove all cells'"
+        aria-label="Remove all cells"
       >
-        <CalendarDaysIcon class="h-4" />
-        <span class="text-xs">{{ game.turnsCount }}</span>
-        <span class="sr-only"> turns past</span>
-      </p>
+        <Squares2X2IconOutline class="h-5" />
+      </button>
 
-      <p v-tooltip="'Score:' + game.cellsStock" class="tag-icon">
-        <TrophyIcon class="h-4" />
-        <span class="sr-only">Score: </span>
-        <span class="text-xs">{{ game.score.global }}</span>
-      </p>
-    </div>
+      <button
+        class="button-icon"
+        :class="{ 'text-gray-400': !game.canUndo }"
+        @click="game.undo"
+        v-tooltip="'Undo'"
+        aria-label="Undo"
+        :disabled="!game.canUndo"
+      >
+        <ArrowUturnLeftIcon class="h-5" />
+      </button>
+    </template>
   </section>
 </template>
