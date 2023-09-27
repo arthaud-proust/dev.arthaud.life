@@ -2,12 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  a,
+  button {
+    @apply focus:outline-focus;
+  }
+}
+
 @layer components {
   .outline-focus {
     @apply outline-2 outline-offset-2 outline-dashed outline-black;
   }
   .button {
-    @apply flex items-center gap-2 text-white bg-black border border-black px-4 py-2 rounded focus:outline-focus;
+    @apply flex items-center gap-2 text-white bg-black border border-black px-4 py-2 rounded;
   }
 
   .button-secondary {
@@ -19,6 +26,10 @@
   }
 
   .button-icon {
-    @apply flex items-center gap-1.5 p-4 focus:outline-focus;
+    @apply flex items-center gap-1.5 p-4;
+  }
+
+  .tag-icon {
+    @apply flex items-center gap-1.5 p-2 rounded;
   }
 }

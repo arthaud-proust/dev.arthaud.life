@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import MatrixGrid from "@/components/Game/MatrixGrid.vue";
 import { useGame } from "@/composables/game";
+import { TURNS_LIMIT } from "@/services/game";
 import { level1 } from "@/utils/matrices";
 import { Squares2X2Icon as Squares2X2IconOutline } from "@heroicons/vue/24/outline";
 import {
@@ -133,20 +134,27 @@ game.value.init(level1).setFrameInterval(speeds[0]);
       </template>
     </div>
 
-    <div class="flex items-center ml-auto">
-      <button
+    <div class="flex items-center ml-auto gap-2">
+      <span
         v-tooltip="game.cellsStock + ' cells in stock'"
-        class="button-icon h-8 rounded"
+        class="tag-icon"
         :class="{ 'text-red-800 bg-red-100': game.cellsStock <= 0 }"
       >
         <StopIcon class="h-4" />
         <span class="text-xs">{{ game.cellsStock }}</span>
-      </button>
+      </span>
 
-      <button class="button-icon" v-tooltip="game.turnsCount + ' turns past'">
+      <span
+        class="tag-icon"
+        v-tooltip="game.turnsCount + ' turns past'"
+        :class="{
+          'text-orange-800 bg-orange-100': game.turnsCount >= TURNS_LIMIT * 0.6,
+          'text-red-800 bg-red-100': game.turnsCount >= TURNS_LIMIT * 0.9,
+        }"
+      >
         <CalendarDaysIcon class="h-4" />
-        <span class="text-xs w-10">{{ game.turnsCount }}</span>
-      </button>
+        <span class="text-xs w-[3ch] text-left">{{ game.turnsCount }}</span>
+      </span>
     </div>
   </section>
 </template>
