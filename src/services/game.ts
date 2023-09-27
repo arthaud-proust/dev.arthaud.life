@@ -12,8 +12,10 @@ import {
 } from "@/utils/matrices";
 
 export const CELLS_COUNT_START = 3;
+export const TURNS_LIMIT = 100;
 
 export class Game {
+  _turnsLimit: number;
   _turnsCount: number;
   _baseCellsStock: number;
   _cellsStock: number;
@@ -27,6 +29,7 @@ export class Game {
   _playingInterval: null | ReturnType<typeof setInterval>;
 
   constructor() {
+    this._turnsLimit = TURNS_LIMIT;
     this._turnsCount = 0;
     this._baseCellsStock = CELLS_COUNT_START;
     this._cellsStock = CELLS_COUNT_START;
@@ -216,7 +219,10 @@ export class Game {
   }
 
   _isEnded(): boolean {
-    return 0 >= getAliveCellsCount(this.matrix);
+    return (
+      0 >= getAliveCellsCount(this.matrix) ||
+      this._turnsCount >= this._turnsLimit
+    );
   }
 
   _checkEnd(): this {
