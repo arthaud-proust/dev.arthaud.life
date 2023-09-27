@@ -14,6 +14,12 @@ const emit = defineEmits<{
   dragToggle: [];
   endToggle: [];
 }>();
+
+function handleCellKeyPress(e: KeyboardEvent) {
+  if (e.code === "Space" || e.code === "Enter") {
+    emit("toggleState");
+  }
+}
 </script>
 
 <template>
@@ -29,9 +35,10 @@ const emit = defineEmits<{
     <button
       v-if="canEdit"
       :aria-label="state === DEAD ? 'Add cell' : 'Remove cell'"
+      @keypress="handleCellKeyPress"
       @mousedown="emit('startToggle')"
       @mouseenter="emit('dragToggle')"
-      class="absolute top-0 left-0 h-full w-full flex items-center justify-center hover:bg-gray-300/30"
+      class="absolute top-0 left-0 h-full w-full flex items-center justify-center hover:bg-gray-300/30 focus:outline-none focus:outline-focus-inside"
     >
       <PlusCircleIcon
         v-if="state === DEAD"

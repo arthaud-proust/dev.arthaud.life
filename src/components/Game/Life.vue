@@ -40,36 +40,6 @@ game.value.init(level1).setFrameInterval(speeds[0]);
 
 <template>
   <section
-    ref="container"
-    class="h-screen w-screen flex flex-col justify-center items-center px-4 py-20 gap-4 md:gap-6 overflow-hidden"
-  >
-    <article class="h-12 flex flex-col items-center justify-center text-center">
-      <template v-if="game.hasEnded">
-        <h1 class="text-xl">Game over!</h1>
-        <p class="text-gray-500">You made a score of {{ game.score.global }}</p>
-      </template>
-    </article>
-
-    <MatrixGrid
-      class="max-w-[65vh]"
-      show-grid
-      :matrix="game.matrix"
-      :can-edit="!game.isPlaying && !game.hasEnded"
-      :can-add-cell="game.canAddCell"
-      @toggle-cell-state="(cellCoords) => game.toggleCellState(cellCoords)"
-    />
-
-    <article class="h-12 flex items-center justify-center text-center">
-      <template v-if="game.hasEnded">
-        <button @click="game.reset()" class="button">
-          <span>Restart</span>
-          <PlayIcon class="h-5" />
-        </button>
-      </template>
-    </article>
-  </section>
-
-  <section
     class="absolute z-50 h-16 w-screen left-0 top-4 flex p-2 gap-2 items-center justify-between md:justify-evenly"
   >
     <button
@@ -111,6 +81,36 @@ game.value.init(level1).setFrameInterval(speeds[0]);
         <span class="text-xs">{{ game.score.global }}</span>
       </p>
     </div>
+  </section>
+
+  <section
+    ref="container"
+    class="h-screen w-screen flex flex-col justify-center items-center px-4 py-20 gap-4 md:gap-6 overflow-hidden"
+  >
+    <article class="h-12 flex flex-col items-center justify-center text-center">
+      <template v-if="game.hasEnded">
+        <h1 class="text-xl">Game over!</h1>
+        <p class="text-gray-500">You made a score of {{ game.score.global }}</p>
+      </template>
+    </article>
+
+    <MatrixGrid
+      class="max-w-[65vh]"
+      show-grid
+      :matrix="game.matrix"
+      :can-edit="!game.isPlaying && !game.hasEnded"
+      :can-add-cell="game.canAddCell"
+      @toggle-cell-state="(cellCoords) => game.toggleCellState(cellCoords)"
+    />
+
+    <article class="h-12 flex items-center justify-center text-center">
+      <template v-if="game.hasEnded">
+        <button @click="game.reset()" class="button">
+          <span>Restart</span>
+          <PlayIcon class="h-5" />
+        </button>
+      </template>
+    </article>
   </section>
 
   <section
