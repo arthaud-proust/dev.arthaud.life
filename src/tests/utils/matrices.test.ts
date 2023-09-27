@@ -3,6 +3,7 @@ import {
   cloneMatrix,
   getAliveCellsCount,
   getDiffAliveCellsCount,
+  getMatrixSize,
 } from "@/utils/matrices";
 
 test("return number of alive cells in matrix", () => {
@@ -17,6 +18,35 @@ test("return number of alive cells in matrix", () => {
       [DEAD, ALIVE, DEAD],
     ]),
   ).toBe(3);
+});
+
+describe("getMatrixSize", () => {
+  test("should return 0 for empty matrix", () => {
+    const matrix: Matrix = [];
+
+    const size = getMatrixSize(matrix);
+
+    expect(size).toBe(0);
+  });
+
+  test("should return 0 for empty rows matrix", () => {
+    const matrix: Matrix = [[]];
+
+    const size = getMatrixSize(matrix);
+
+    expect(size).toBe(0);
+  });
+
+  test("should return number of cells (alive or dead)", () => {
+    const matrix: Matrix = [
+      [DEAD, DEAD, ALIVE],
+      [ALIVE, DEAD, DEAD],
+    ];
+
+    const size = getMatrixSize(matrix);
+
+    expect(size).toBe(6);
+  });
 });
 
 describe("getDiffAliveCellsCount", () => {

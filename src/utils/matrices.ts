@@ -1,5 +1,17 @@
 import { ALIVE as A, ALIVE, DEAD as D, Matrix } from "@/types";
 
+export function getMatrixSize(matrix: Matrix): number {
+  let count = 0;
+
+  matrix.forEach((row) =>
+    row.forEach((_cellState) => {
+      count++;
+    }),
+  );
+
+  return count;
+}
+
 export function getAliveCellsCount(matrix: Matrix): number {
   let count = 0;
 
