@@ -1,4 +1,4 @@
-import { CELLS_COUNT_START, Game } from "@/services/game";
+import { CELLS_COUNT_START, Game, TURNS_LIMIT } from "@/services/game";
 import { ALIVE, DEAD, Matrix } from "@/types";
 import { delay } from "@/utils/delay";
 
@@ -229,24 +229,48 @@ test("reset should set state same as when game init", async () => {
   expect(game.cellsStock).toBe(CELLS_COUNT_START);
 });
 
-test("should end when no cell alive", async () => {
-  const game = new Game();
-  // this matrix will live 1 tick
-  const startMatrix: Matrix = [
-    [ALIVE, DEAD, ALIVE],
-    [DEAD, DEAD, DEAD],
-    [DEAD, ALIVE, DEAD],
-  ];
+describe("hasEnded", () => {
+  test("should be true when no cell alive", () => {
+    const game = new Game();
+    // this matrix will live 1 tick
+    const startMatrix: Matrix = [
+      [ALIVE, DEAD, ALIVE],
+      [DEAD, DEAD, DEAD],
+      [DEAD, ALIVE, DEAD],
+    ];
 
-  game.init(startMatrix).playWithoutTicking();
+    game.init(startMatrix).playWithoutTicking();
 
-  game.tick();
+    game.tick();
 
-  expect(game.isPlaying).toBe(true);
-  expect(game.hasEnded).toBe(false);
+    expect(game.isPlaying).toBe(true);
+    expect(game.hasEnded).toBe(false);
 
-  game.tick();
+    game.tick();
 
-  expect(game.isPlaying).toBe(false);
-  expect(game.hasEnded).toBe(true);
+    expect(game.isPlaying).toBe(false);
+    expect(game.hasEnded).toBe(true);
+  });
+
+  test("should be true when turns limit reached", () => {
+    const game = new Game();
+    // this matrix will live indefinitly
+    const startMatrix: Matrix = [
+      [DEAD, ALIVE, DEAD],
+      [DEAD, ALIVE, DEAD],
+      [DEAD, ALIVE, DEAD],
+    ];
+
+    game.init(startMatrix).playWithoutTicking();
+
+    for (let i = 1; i < TURNS_LIMIT; i++) {
+      game.tick();
+    }
+
+    expect(game.hasEnded).toBe(false);
+
+    game.tick();
+
+    expect(game.hasEnded).toBe(true);
+  });
 });
