@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { version } from "@/../package.json";
 import MatrixGrid from "@/components/Game/MatrixGrid.vue";
 import { useGame } from "@/composables/game";
-import { planner } from "@/utils/matrices";
+import { exampleRule1 } from "@/utils/matrices";
+import { ArrowRightIcon, PlayIcon } from "@heroicons/vue/24/solid";
+import { ref } from "vue";
 
 const emit = defineEmits<{
   previous: [];
@@ -12,30 +13,42 @@ const emit = defineEmits<{
 
 const { game } = useGame();
 
-game.value.init(planner);
+game.value.init(exampleRule1);
+
+const exampleShown = ref(false);
+function showExample() {
+  game.value.tick();
+  exampleShown.value = true;
+}
 </script>
 <template>
+  <button class="absolute top-0 right-0 button-tertiary" @click="emit('skip')">
+    Go to game
+  </button>
+
   <article class="w-full">
     <hgroup class="mb-4">
-      <p class="text-sm mb-1 text-gray-500">
-        <a
-          class="underline"
-          href="https://github.com/arthaud-proust/dev.arthaud.life/releases"
-          target="_blank"
-          rel="noopener"
-          >v{{ version }}</a
-        >
+      <p class="text-sm mb-1 text-gray-500">Rule 1 on 3</p>
+      <h1 class="text-3xl">Birth of a cell</h1>
+      <p>
+        A white cell will become black if 3 of the 8 cells around are black.
       </p>
-      <h1 class="text-3xl">Life</h1>
-      <p>A replica of the "Game of life" invented by John Horton Conway</p>
     </hgroup>
 
-    <MatrixGrid class="mb-4" show-grid :matrix="game.matrix" />
+    <MatrixGrid class="mb-4" show-grid :matrix="game.matrix" cells-transition />
 
-    <div class="flex gap-4">
-      <button class="button" @click="emit('next')">Discover</button>
-      <button class="button-secondary" @click="emit('skip')">
-        Play directly
+    <div class="flex justify-between">
+      <button class="button-tertiary" @click="emit('previous')">
+        Back to home
+      </button>
+
+      <button v-if="!exampleShown" class="button" @click="showExample">
+        <span>Show me</span>
+        <PlayIcon class="h-4" />
+      </button>
+      <button v-else class="button" @click="emit('next')">
+        <span>Learn second rule</span>
+        <ArrowRightIcon class="h-4" />
       </button>
     </div>
   </article>

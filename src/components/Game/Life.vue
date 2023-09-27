@@ -5,6 +5,7 @@ import { TURNS_LIMIT } from "@/services/game";
 import { level1 } from "@/utils/matrices";
 import { Squares2X2Icon as Squares2X2IconOutline } from "@heroicons/vue/24/outline";
 import {
+  AcademicCapIcon,
   ArrowPathIcon,
   ArrowUturnLeftIcon,
   CalendarDaysIcon,
@@ -15,6 +16,10 @@ import {
   TrophyIcon,
 } from "@heroicons/vue/24/solid";
 import { ref, watch } from "vue";
+
+const emit = defineEmits<{
+  showTutorial: [];
+}>();
 
 const { game } = useGame();
 
@@ -65,36 +70,47 @@ game.value.init(level1).setFrameInterval(speeds[0]);
   </section>
 
   <section
-    class="absolute z-50 h-16 w-screen left-0 top-4 flex p-2 gap-2 items-center justify-center"
+    class="absolute z-50 h-16 w-screen left-0 top-4 flex p-2 gap-2 items-center justify-between md:justify-evenly"
   >
-    <p
-      v-tooltip="game.cellsStock + ' cells in stock'"
-      class="tag-icon"
-      :class="{ 'text-red-800 bg-red-100': game.cellsStock <= 0 }"
+    <button
+      class="button-icon"
+      @click="emit('showTutorial')"
+      v-tooltip="'Tutorial'"
+      aria-label="Tutorial"
     >
-      <StopIcon class="h-5" />
-      <span class="text-xs">{{ game.cellsStock }}</span>
-      <span class="sr-only"> cells in stock</span>
-    </p>
+      <AcademicCapIcon class="h-5" />
+    </button>
 
-    <p
-      class="tag-icon"
-      v-tooltip="game.turnsCount + ' turns past'"
-      :class="{
-        'text-orange-800 bg-orange-100': game.turnsCount >= TURNS_LIMIT * 0.6,
-        'text-red-800 bg-red-100': game.turnsCount >= TURNS_LIMIT * 0.9,
-      }"
-    >
-      <CalendarDaysIcon class="h-5" />
-      <span class="text-xs">{{ game.turnsCount }}</span>
-      <span class="sr-only"> turns past</span>
-    </p>
+    <div class="flex gap-2 items-center">
+      <p
+        v-tooltip="game.cellsStock + ' cells in stock'"
+        class="tag-icon"
+        :class="{ 'text-red-800 bg-red-100': game.cellsStock <= 0 }"
+      >
+        <StopIcon class="h-5" />
+        <span class="text-xs">{{ game.cellsStock }}</span>
+        <span class="sr-only"> cells in stock</span>
+      </p>
 
-    <p v-tooltip="'Score:' + game.cellsStock" class="tag-icon">
-      <TrophyIcon class="h-5" />
-      <span class="sr-only">Score: </span>
-      <span class="text-xs">{{ game.score.global }}</span>
-    </p>
+      <p
+        class="tag-icon"
+        v-tooltip="game.turnsCount + ' turns past'"
+        :class="{
+          'text-orange-800 bg-orange-100': game.turnsCount >= TURNS_LIMIT * 0.6,
+          'text-red-800 bg-red-100': game.turnsCount >= TURNS_LIMIT * 0.9,
+        }"
+      >
+        <CalendarDaysIcon class="h-5" />
+        <span class="text-xs">{{ game.turnsCount }}</span>
+        <span class="sr-only"> turns past</span>
+      </p>
+
+      <p v-tooltip="'Score:' + game.cellsStock" class="tag-icon">
+        <TrophyIcon class="h-5" />
+        <span class="sr-only">Score: </span>
+        <span class="text-xs">{{ game.score.global }}</span>
+      </p>
+    </div>
   </section>
 
   <section
