@@ -1,9 +1,13 @@
-import { ALIVE, DEAD, Matrix } from "@/types";
+import { ALIVE, DEAD, FlattenedMatrix, Matrix } from "@/types";
 import {
   cloneMatrix,
+  flattenMatrix,
   getAliveCellsCount,
   getDiffAliveCellsCount,
+  getMatrixHeight,
   getMatrixSize,
+  getMatrixWidth,
+  unflattenMatrix,
 } from "@/utils/matrices";
 
 test("return number of alive cells in matrix", () => {
@@ -18,6 +22,56 @@ test("return number of alive cells in matrix", () => {
       [DEAD, ALIVE, DEAD],
     ]),
   ).toBe(3);
+});
+
+describe("getMatrixHeight", () => {
+  test("should return 0 for empty matrix", () => {
+    const matrix: Matrix = [];
+
+    const size = getMatrixHeight(matrix);
+
+    expect(size).toBe(0);
+  });
+
+  test("should return number of rows (alive or dead)", () => {
+    const matrix: Matrix = [
+      [DEAD, DEAD, ALIVE],
+      [ALIVE, DEAD, DEAD],
+    ];
+
+    const size = getMatrixHeight(matrix);
+
+    expect(size).toBe(2);
+  });
+});
+
+describe("getMatrixWidth", () => {
+  test("should return 0 for empty matrix", () => {
+    const matrix: Matrix = [];
+
+    const size = getMatrixWidth(matrix);
+
+    expect(size).toBe(0);
+  });
+
+  test("should return 0 for empty rows matrix", () => {
+    const matrix: Matrix = [[]];
+
+    const size = getMatrixWidth(matrix);
+
+    expect(size).toBe(0);
+  });
+
+  test("should return number of cols (alive or dead)", () => {
+    const matrix: Matrix = [
+      [DEAD, DEAD, ALIVE],
+      [ALIVE, DEAD, DEAD],
+    ];
+
+    const size = getMatrixWidth(matrix);
+
+    expect(size).toBe(3);
+  });
 });
 
 describe("getMatrixSize", () => {
@@ -46,6 +100,74 @@ describe("getMatrixSize", () => {
     const size = getMatrixSize(matrix);
 
     expect(size).toBe(6);
+  });
+});
+
+describe("flattenMatrix", () => {
+  test("should return empty for empty matrix", () => {
+    const matrix: Matrix = [];
+
+    const flattenedMatrix = flattenMatrix(matrix);
+
+    expect(flattenedMatrix.cells).toStrictEqual([]);
+    expect(flattenedMatrix.width).toBe(0);
+  });
+
+  test("should return empty for empty rows matrix", () => {
+    const matrix: Matrix = [[]];
+
+    const flattenedMatrix = flattenMatrix(matrix);
+
+    expect(flattenedMatrix.cells).toStrictEqual([]);
+    expect(flattenedMatrix.width).toBe(0);
+  });
+
+  test("should return cells and width for a filled matrix", () => {
+    const matrix: Matrix = [
+      [DEAD, DEAD, ALIVE],
+      [ALIVE, DEAD, DEAD],
+    ];
+
+    const flattenedMatrix = flattenMatrix(matrix);
+
+    expect(flattenedMatrix.cells).toStrictEqual([
+      DEAD,
+      DEAD,
+      ALIVE,
+      ALIVE,
+      DEAD,
+      DEAD,
+    ]);
+    expect(flattenedMatrix.width).toBe(3);
+  });
+});
+
+describe("unflattenMatrix", () => {
+  test("should return empty matrix for flattened matrix with no cells ", () => {
+    const flattenedMatrix: FlattenedMatrix = { cells: [], width: 10 };
+
+    const matrix = unflattenMatrix(flattenedMatrix);
+
+    expect(matrix).toStrictEqual([]);
+  });
+
+  test("should return empty matrix for flattened matrix with 0 width ", () => {
+    const flattenedMatrix: FlattenedMatrix = { cells: [DEAD, ALIVE], width: 0 };
+
+    const matrix = unflattenMatrix(flattenedMatrix);
+
+    expect(matrix).toStrictEqual([]);
+  });
+
+  test("should return filled matrix for flattened matrix with width and cells ", () => {
+    const flattenedMatrix: FlattenedMatrix = {
+      cells: [DEAD, ALIVE],
+      width: 1,
+    };
+
+    const matrix = unflattenMatrix(flattenedMatrix);
+
+    expect(matrix).toStrictEqual([[DEAD], [ALIVE]]);
   });
 });
 

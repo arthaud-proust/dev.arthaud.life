@@ -1,4 +1,4 @@
-import { ALIVE as A, ALIVE, DEAD as D, Matrix } from "@/types";
+import { ALIVE as A, ALIVE, DEAD as D, FlattenedMatrix, Matrix } from "@/types";
 
 export function getMatrixSize(matrix: Matrix): number {
   let count = 0;
@@ -10,6 +10,39 @@ export function getMatrixSize(matrix: Matrix): number {
   );
 
   return count;
+}
+
+export function getMatrixHeight(matrix: Matrix): number {
+  return matrix.length;
+}
+
+export function getMatrixWidth(matrix: Matrix): number {
+  if (!matrix.length) {
+    return 0;
+  }
+
+  return matrix[0].length;
+}
+
+export function flattenMatrix(matrix: Matrix): FlattenedMatrix {
+  return {
+    cells: matrix.flat(1),
+    width: getMatrixWidth(matrix),
+  };
+}
+
+export function unflattenMatrix(flattenedMatrix: FlattenedMatrix): Matrix {
+  if (!flattenedMatrix.cells.length || flattenedMatrix.width === 0) {
+    return [];
+  }
+
+  const cellsCopy = Array.from(flattenedMatrix.cells);
+  const matrix = [];
+
+  while (cellsCopy.length > 0)
+    matrix.push(cellsCopy.splice(0, flattenedMatrix.width));
+
+  return matrix;
 }
 
 export function getAliveCellsCount(matrix: Matrix): number {
