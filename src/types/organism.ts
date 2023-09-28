@@ -1,3 +1,13 @@
-import { Matrix } from "@/types/matrix";
+import { FlattenedMatrix, Matrix } from "@/types/matrix";
 
-export type Organism = Matrix;
+export type OrganismName = string;
+
+export interface Organism {
+  name: OrganismName;
+  matrix: Matrix;
+}
+
+export interface FlattenedOrganism {
+  name: OrganismName;
+  matrix: FlattenedMatrix;
+}
