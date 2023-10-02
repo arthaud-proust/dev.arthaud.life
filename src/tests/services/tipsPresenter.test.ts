@@ -98,6 +98,7 @@ describe("tipsToDisplay", () => {
       tipsList[0],
       tipsList[1],
     ]);
+    expect(tipsPresenter.tipsToDisplay({ score: 0 })).toStrictEqual([]);
   });
 
   test("should return tips that matches minGridSize rule", () => {
@@ -131,6 +132,7 @@ describe("tipsToDisplay", () => {
       tipsList[0],
       tipsList[1],
     ]);
+    expect(tipsPresenter.tipsToDisplay({ matrixSize: 0 })).toStrictEqual([]);
   });
 
   test("should return tips that matches minCellsStock rule", () => {
@@ -164,6 +166,7 @@ describe("tipsToDisplay", () => {
       tipsList[0],
       tipsList[1],
     ]);
+    expect(tipsPresenter.tipsToDisplay({ cellsStock: 0 })).toStrictEqual([]);
   });
 
   test("should return tips that matches minTurns rule", () => {
@@ -197,6 +200,7 @@ describe("tipsToDisplay", () => {
       tipsList[0],
       tipsList[1],
     ]);
+    expect(tipsPresenter.tipsToDisplay({ turns: 0 })).toStrictEqual([]);
   });
 
   test("should return tips that matches multiple rules", () => {

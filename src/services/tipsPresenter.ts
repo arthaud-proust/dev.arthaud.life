@@ -40,7 +40,8 @@ export class TipsPresenter {
       }
 
       if (
-        rulesInput.score &&
+        rulesInput.score !== null &&
+        rulesInput.score !== undefined &&
         tip.rules.minScore &&
         rulesInput.score < tip.rules.minScore
       ) {
@@ -48,7 +49,8 @@ export class TipsPresenter {
       }
 
       if (
-        rulesInput.matrixSize &&
+        rulesInput.matrixSize !== null &&
+        rulesInput.matrixSize !== undefined &&
         tip.rules.minMatrixSize &&
         rulesInput.matrixSize < tip.rules.minMatrixSize
       ) {
@@ -56,7 +58,8 @@ export class TipsPresenter {
       }
 
       if (
-        rulesInput.cellsStock &&
+        rulesInput.cellsStock !== null &&
+        rulesInput.cellsStock !== undefined &&
         tip.rules.minCellsStock &&
         rulesInput.cellsStock < tip.rules.minCellsStock
       ) {
@@ -64,7 +67,8 @@ export class TipsPresenter {
       }
 
       if (
-        rulesInput.turns &&
+        rulesInput.turns !== null &&
+        rulesInput.turns !== undefined &&
         tip.rules.minTurns &&
         rulesInput.turns < tip.rules.minTurns
       ) {
