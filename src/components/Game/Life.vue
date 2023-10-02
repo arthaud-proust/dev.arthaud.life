@@ -2,7 +2,7 @@
 import MatrixGrid from "@/components/Game/MatrixGrid.vue";
 import { useGame } from "@/composables/game";
 import { TURNS_LIMIT } from "@/services/game";
-import { level1 } from "@/utils/matrices";
+import { getMatrixSize, level1 } from "@/utils/matrices";
 import { Squares2X2Icon as Squares2X2IconOutline } from "@heroicons/vue/24/outline";
 import {
   AcademicCapIcon,
@@ -16,6 +16,7 @@ import {
   TrophyIcon,
 } from "@heroicons/vue/24/solid";
 import { ref, watch } from "vue";
+import TipModal from "../Tip/TipModal.vue";
 
 const emit = defineEmits<{
   showTutorial: [];
@@ -174,4 +175,12 @@ game.value.init(level1).setFrameInterval(speeds[0]);
       </button>
     </template>
   </section>
+
+  <TipModal
+    :cells-stock="game.cellsStock"
+    :score="game.score.global"
+    :matrix-size="getMatrixSize(game.matrix)"
+    :turns="game.turnsCount"
+    @show-popup="game.pause()"
+  />
 </template>
