@@ -6,9 +6,11 @@
       <DialogPanel
         class="max-w-lg w-full bg-white rounded-lg px-4 pt-8 pb-6 text-center"
       >
-        <DialogTitle class="mb-4 text-xl">Learn a tip!</DialogTitle>
+        <DialogTitle class="mb-4 text-xl">{{
+          displayedTip?.title ?? "Learn a tip!"
+        }}</DialogTitle>
         <DialogDescription class="mb-4">
-          {{ displayedTip?.text ?? "lorem ipsum dolor sit amet" }}
+          {{ displayedTip?.text ?? "Lorem ipsum dolor sit amet." }}
         </DialogDescription>
 
         <button @click="handleRead" class="button mx-auto">Ok, close</button>
@@ -33,7 +35,7 @@ const emit = defineEmits<{
   showPopup: [];
 }>();
 
-const isOpen = ref(true);
+const isOpen = ref(false);
 const { tipsPresenter } = useTipsPresenter();
 
 const displayedTip = ref<Tip>();

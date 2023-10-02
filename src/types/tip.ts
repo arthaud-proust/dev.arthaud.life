@@ -16,6 +16,7 @@ export type TipId = number;
 
 export interface Tip {
   id: TipId;
+  title?: string;
   text: string;
   hasBeenRead?: boolean;
   rules?: TipRules;
