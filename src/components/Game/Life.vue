@@ -104,10 +104,15 @@ onMounted(() => {
     ref="container"
     class="h-screen w-screen flex flex-col justify-center items-center px-4 py-20 gap-4 md:gap-6 overflow-hidden"
   >
-    <article class="h-12 flex flex-col items-center justify-center text-center">
+    <article
+      class="h-16 flex flex-shrink-0 flex-col items-center justify-center text-center"
+    >
       <template v-if="game.hasEnded">
         <h1 class="text-xl">Game over!</h1>
-        <p class="text-gray-500">You made a score of {{ game.score.global }}</p>
+        <p class="text-gray-500">
+          You made a best score of
+          {{ game.scoreService.bestScore?.global ?? 0 }}
+        </p>
       </template>
     </article>
 
@@ -120,7 +125,9 @@ onMounted(() => {
       @toggle-cell-state="(cellCoords) => game.toggleCellState(cellCoords)"
     />
 
-    <article class="h-12 flex items-center justify-center text-center">
+    <article
+      class="h-16 flex flex-shrink-0 items-center justify-center text-center"
+    >
       <template v-if="game.hasEnded">
         <button @click="game.reset()" class="button">
           <span>Restart</span>

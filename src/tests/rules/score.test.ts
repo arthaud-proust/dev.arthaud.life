@@ -3,7 +3,7 @@ import {
   getCellsStockScore,
   getMatrixSizeScore,
   getScore,
-} from "@/utils/score";
+} from "@/rules/score";
 
 describe("matrix size score", () => {
   test("score should be equal to 0 when input <= 25", () => {
