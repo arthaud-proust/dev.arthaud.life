@@ -274,3 +274,19 @@ describe("hasEnded", () => {
     expect(game.hasEnded).toBe(true);
   });
 });
+
+describe("score", () => {
+  test("history should be updated each tick", () => {
+    const game = new Game();
+    const startMatrix: Matrix = [
+      [DEAD, ALIVE, DEAD],
+      [DEAD, ALIVE, DEAD],
+      [DEAD, ALIVE, DEAD],
+    ];
+    game.init(startMatrix).playWithoutTicking();
+
+    game.tick();
+
+    expect(game.scoreService.history.length).toBe(1);
+  });
+});

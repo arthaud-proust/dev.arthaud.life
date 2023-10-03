@@ -4,6 +4,7 @@
  */
 
 import { getNextMatrix } from "@/rules/matrix";
+import { getScore } from "@/rules/score";
 import { ALIVE, CellCoords, CellState, DEAD, Matrix } from "@/types";
 import { Score } from "@/types/score";
 import {
@@ -12,7 +13,7 @@ import {
   getDiffAliveCellsCount,
   getMatrixSize,
 } from "@/utils/matrices";
-import { getScore } from "@/utils/score";
+import { ScoreService } from "./scoreService";
 
 export const CELLS_COUNT_START = 3;
 export const TURNS_LIMIT = 100;
@@ -30,6 +31,7 @@ export class Game {
   hasStarted: boolean;
   hasEnded: boolean;
   _playingInterval: null | ReturnType<typeof setInterval>;
+  _scoreService: ScoreService;
 
   constructor() {
     this._turnsLimit = TURNS_LIMIT;
@@ -44,6 +46,7 @@ export class Game {
     this.hasStarted = false;
     this.hasEnded = false;
     this._playingInterval = null;
+    this._scoreService = new ScoreService();
   }
 
   init(matrix: Matrix, cellsStock: number = CELLS_COUNT_START): this {
@@ -122,6 +125,7 @@ export class Game {
     this._turnsCount = 0;
     this.matrix = cloneMatrix(this._baseMatrix);
     this._cellsStock = this._baseCellsStock;
+    this._scoreService = new ScoreService();
 
     this.pause();
     this.hasStarted = false;
@@ -193,6 +197,10 @@ export class Game {
     return getDiffAliveCellsCount(this.previousMatrix, this.matrix);
   }
 
+  get scoreService(): ScoreService {
+    return this._scoreService;
+  }
+
   get score(): Score {
     return getScore({
       matrixSize: getMatrixSize(this.matrix),
@@ -213,6 +221,12 @@ export class Game {
 
   tick(): this {
     this._turnsCount++;
+
+    this._scoreService.computeScore({
+      matrixSize: getMatrixSize(this.matrix),
+      aliveCells: getAliveCellsCount(this.matrix),
+      cellsStock: this.cellsStock,
+    });
 
     this.matrix = getNextMatrix(this.matrix);
 
