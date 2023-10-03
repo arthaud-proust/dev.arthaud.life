@@ -1,6 +1,6 @@
 import { Tip } from "@/types/tip";
 
-export const tips: Array<Tip> = [
+export const ingameTips: Array<Tip> = [
   {
     id: 1,
     title: "Grow the matrix!",

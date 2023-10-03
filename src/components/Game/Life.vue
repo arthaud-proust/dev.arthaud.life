@@ -10,13 +10,15 @@ import {
   ArrowUturnLeftIcon,
   CalendarDaysIcon,
   ClockIcon,
+  LightBulbIcon,
   PauseIcon,
   PlayIcon,
   StopIcon,
   TrophyIcon,
 } from "@heroicons/vue/24/solid";
-import { ref, watch } from "vue";
-import TipModal from "../Tip/TipModal.vue";
+import { onMounted, ref, watch } from "vue";
+import GlobalTipsModal from "../Tip/GlobalTipsModal.vue";
+import IngameTipsModal from "../Tip/IngameTipsModal.vue";
 
 const emit = defineEmits<{
   showTutorial: [];
@@ -26,6 +28,7 @@ const { game } = useGame();
 
 const speeds = [600, 250, 50];
 const speedIndex = ref(0);
+const isGlobalTipsModalOpen = ref(false);
 
 watch(speedIndex, (newValue: number) => {
   game.value.setFrameInterval(speeds[newValue]);
@@ -36,21 +39,34 @@ function setNextSpeed() {
     speedIndex.value + 1 === speeds.length ? 0 : speedIndex.value + 1;
 }
 
-game.value.init(level1).setFrameInterval(speeds[0]);
+onMounted(() => {
+  game.value.init(level1).setFrameInterval(speeds[0]);
+});
 </script>
 
 <template>
   <section
     class="absolute z-50 h-16 w-screen left-0 top-4 flex p-2 gap-2 items-center justify-between md:justify-evenly"
   >
-    <button
-      class="button-icon"
-      @click="emit('showTutorial')"
-      v-tooltip="'Tutorial'"
-      aria-label="Tutorial"
-    >
-      <AcademicCapIcon class="h-5" />
-    </button>
+    <div class="flex gap-2 items-center">
+      <button
+        class="button-icon"
+        @click="emit('showTutorial')"
+        v-tooltip="'Show tutorial'"
+        aria-label="Show tutorial"
+      >
+        <AcademicCapIcon class="h-5" />
+      </button>
+
+      <button
+        class="button-icon"
+        @click="isGlobalTipsModalOpen = true"
+        v-tooltip="'Show tips'"
+        aria-label="Show tips"
+      >
+        <LightBulbIcon class="h-5" />
+      </button>
+    </div>
 
     <div class="flex gap-2 items-center">
       <p
@@ -76,7 +92,7 @@ game.value.init(level1).setFrameInterval(speeds[0]);
         <span class="sr-only"> turns past</span>
       </p>
 
-      <p v-tooltip="'Score:' + game.cellsStock" class="tag-icon">
+      <p v-tooltip="'Score: ' + game.cellsStock" class="tag-icon">
         <TrophyIcon class="h-5" />
         <span class="sr-only">Score: </span>
         <span class="text-xs">{{ game.score.global }}</span>
@@ -176,11 +192,15 @@ game.value.init(level1).setFrameInterval(speeds[0]);
     </template>
   </section>
 
-  <TipModal
+  <IngameTipsModal
     :cells-stock="game.cellsStock"
     :score="game.score.global"
     :matrix-size="getMatrixSize(game.matrix)"
     :turns="game.turnsCount"
     @show-popup="game.pause()"
+  />
+  <GlobalTipsModal
+    :is-open="isGlobalTipsModalOpen"
+    @close="isGlobalTipsModalOpen = false"
   />
 </template>

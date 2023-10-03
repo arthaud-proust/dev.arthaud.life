@@ -20,7 +20,7 @@
 </template>
 
 <script setup lang="ts">
-import { useTipsPresenter } from "@/composables/tipsPresenter";
+import { useIngameTipsPresenter } from "@/composables/ingameTipsPresenter";
 import { Tip, TipRulesInput } from "@/types/tip";
 import {
   Dialog,
@@ -36,12 +36,12 @@ const emit = defineEmits<{
 }>();
 
 const isOpen = ref(false);
-const { tipsPresenter } = useTipsPresenter();
+const { ingameTipsPresenter } = useIngameTipsPresenter();
 
 const displayedTip = ref<Tip>();
 
 watch(
-  () => tipsPresenter.value.tipsToDisplay(props),
+  () => ingameTipsPresenter.value.tipsToDisplay(props),
   (value) => {
     if (value.length) {
       displayedTip.value = value[0];
@@ -57,7 +57,7 @@ function openPopup() {
 
 function handleRead() {
   if (displayedTip.value) {
-    tipsPresenter.value.readTip(displayedTip.value.id);
+    ingameTipsPresenter.value.readTip(displayedTip.value.id);
   }
   isOpen.value = false;
 }
