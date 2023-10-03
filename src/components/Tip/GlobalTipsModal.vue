@@ -8,7 +8,7 @@
       >
         <DialogTitle class="mb-4 text-lg">Want some tips?</DialogTitle>
 
-        <div class="py-6 px-8 -mx-4 mb-4 overflow-hidden">
+        <div class="py-6 px-8 md:px-16 -mx-4 mb-4 overflow-hidden">
           <Swiper
             :modules="modules"
             effect="cards"
